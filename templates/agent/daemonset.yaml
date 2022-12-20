@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: {{ include "tricorder.fullname" . }}-tricorder-agent
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "tricorder.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "tricorder.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "tricorder.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}-tricorder-agent
+          image: "{{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag | default .Chart.AppVersion }}"
+          args: ["--module_deployer_address={{ include "tricorder.fullname" . }}-tricorder-api-server:50051"]
+          imagePullPolicy: Always
