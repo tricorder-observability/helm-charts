@@ -33,8 +33,6 @@ jobs:
 
       - name: release tricorder
         uses: helm/chart-releaser-action@v1.4.1
-        with:
-          charts_dir: charts/
         env:
           CR_TOKEN: "${{ secrets.ACTIONS_TOKEN }}"
 
