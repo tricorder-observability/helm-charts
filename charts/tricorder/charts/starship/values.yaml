@@ -1,3 +1,7 @@
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
 apiServer:
   image:
     repository: 387875775441.dkr.ecr.us-east-1.amazonaws.com/api-server

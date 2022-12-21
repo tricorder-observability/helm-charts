@@ -1,0 +1,30 @@
+apiVersion: v2
+name: tricorder
+description: Helm Charts for tricorder observability.
+
+sources:
+  - https://github.com/tricorder-observability/helm-charts
+
+maintainers:
+  - name: JaredTan95
+  - name: yaxiong-zhao
+
+version: 0.0.1
+
+appVersion: "1.16.0"
+
+dependencies:
+  - name: timescaledb-single
+    version: 0.27.2
+    repository: "https://charts.timescale.com"
+    condition: timescaledb-single.enabled
+  - name: promscale
+    version: 14.6.0
+    repository: "https://charts.timescale.com"
+    condition: promscale.enabled
+  - name: starship
+    version: 0.0.9
+  - name: kube-prometheus-stack
+    version: 41.7.3
+    repository: "https://prometheus-community.github.io/helm-charts"
+    condition: kube-prometheus-stack.enabled
