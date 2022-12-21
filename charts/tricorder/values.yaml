@@ -9,10 +9,10 @@ fullnameOverride: ""
 starship:
   apiServer:
     image:
-      repository: public.ecr.aws/w3q2q1s5/api-server
+      repository: 387875775441.dkr.ecr.us-east-1.amazonaws.com/api-server
       pullPolicy: Always
       # Overrides the image tag whose default is the chart appVersion.
-      tag: "v0.0.8"
+      tag: "v0.0.5"
 
     replicaCount: 1
 
