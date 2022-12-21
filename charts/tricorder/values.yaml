@@ -9,7 +9,7 @@ fullnameOverride: ""
 starship:
   apiServer:
     image:
-      repository: 387875775441.dkr.ecr.us-east-1.amazonaws.com/api-server
+      repository: public.ecr.aws/w3q2q1s5/api-server
       pullPolicy: IfNotPresent
       # Overrides the image tag whose default is the chart appVersion.
       tag: "v0.0.5"
@@ -122,10 +122,10 @@ ui:
     #   cpu: 100m
     #   memory: 128Mi
   image:
-    repository: 387875775441.dkr.ecr.us-east-1.amazonaws.com/mgmt-ui
+    repository: public.ecr.aws/w3q2q1s5/mgmt-ui
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.0.5"
+    tag: "v0.0.8"
 
   # Configuration for ports
   ports:

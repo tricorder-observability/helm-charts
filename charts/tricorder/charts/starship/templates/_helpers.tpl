@@ -9,3 +9,15 @@ Create the name of the apiServer service account to use
 {{- end }}
 {{- end }}
 
+{{/* Build the list of port for deployment service */}}
+{{- define "tricorder.apiServer.svc.ports" -}}
+{{- $ports := deepCopy .Values.apiServer.ports }}
+{{- range $key, $port := $ports }}
+{{- if $port.enabled }}
+- name: {{ $key }}
+  port: {{ $port.servicePort }}
+  targetPort: {{ $port.servicePort }}
+  protocol: {{ $port.protocol }}
+{{- end }}
+{{- end }}
+{{- end }}
