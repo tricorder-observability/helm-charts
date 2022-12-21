@@ -12,7 +12,7 @@ starship:
       repository: public.ecr.aws/w3q2q1s5/api-server
       pullPolicy: Always
       # Overrides the image tag whose default is the chart appVersion.
-      tag: "v0.0.6"
+      tag: "v0.0.8"
 
     replicaCount: 1
 
@@ -105,10 +105,10 @@ starship:
     affinity: {}
   agent:
     image:
-      repository: 387875775441.dkr.ecr.us-east-1.amazonaws.com/tricorder-agent
+      repository: public.ecr.aws/w3q2q1s5/tricorder-agent
       pullPolicy: Always
       # Overrides the image tag whose default is the chart appVersion.
-      tag: "v0.0.1"
+      tag: "v0.0.6"
 
 ui:
   resources: {}
