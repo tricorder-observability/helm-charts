@@ -27,12 +27,20 @@ jobs:
 
       - name: Add dependent repositories
         run: |
-          helm repo add timescale 'https://charts.timescale.com'
-          helm dep up .
+          helm repo add timescale https://charts.timescale.com
+          helm repo add kube-prometheus-stack https://prometheus-community.github.io/helm-charts
+          helm dep up charts/**
 
-      - name: Run chart-releaser
+      - name: release tricorder
         uses: helm/chart-releaser-action@v1.4.1
         with:
-          charts_dir: ../
+          charts_dir: charts/tricorder
+        env:
+          CR_TOKEN: "${{ secrets.ACTIONS_TOKEN }}"
+
+      - name: release tricorder starship & ui
+        uses: helm/chart-releaser-action@v1.4.1
+        with:
+          charts_dir: charts/tricorder/charts
         env:
           CR_TOKEN: "${{ secrets.ACTIONS_TOKEN }}"
