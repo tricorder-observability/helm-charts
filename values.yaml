@@ -2,102 +2,112 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-apiServer:
-  image:
-    repository: 387875775441.dkr.ecr.us-east-1.amazonaws.com/api-server
-    pullPolicy: IfNotPresent
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.0.5"
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
 
-  replicaCount: 1
+starship:
+  apiServer:
+    image:
+      repository: 387875775441.dkr.ecr.us-east-1.amazonaws.com/api-server
+      pullPolicy: IfNotPresent
+      # Overrides the image tag whose default is the chart appVersion.
+      tag: "v0.0.5"
 
-  command:
-    extraArgs:
-      - --module_db_path=/tricorder/http/tricorder.db
+    replicaCount: 1
 
-# Configuration for ports
-  ports:
-    http:
-      enabled: true
-      containerPort: 8080
-      servicePort: 8080
-      hostPort: 8080
-      protocol: TCP
-    grpc:
-      enabled: true
-      containerPort: 50051
-      servicePort: 50051
-      hostPort: 50051
-      protocol: TCP
+    command:
+      extraArgs:
+        - --module_db_path=/tricorder/http/tricorder.db
 
-  resources: {}
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
+  # Configuration for ports
+    ports:
+      http:
+        enabled: true
+        containerPort: 8080
+        servicePort: 8080
+        hostPort: 8080
+        protocol: TCP
+      grpc:
+        enabled: true
+        containerPort: 50051
+        servicePort: 50051
+        hostPort: 50051
+        protocol: TCP
 
-  serviceAccount:
-    # Specifies whether a service account should be created
-    create: true
-    # Annotations to add to the service account
-    annotations: {}
-    # The name of the service account to use.
-    # If not set and create is true, a name is generated using the fullname template
-    name: ""
+    resources: {}
+      # We usually recommend not to specify default resources and to leave this as a conscious
+      # choice for the user. This also increases chances charts run on environments with little
+      # resources, such as Minikube. If you do want to specify resources, uncomment the following
+      # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+      # limits:
+      #   cpu: 100m
+      #   memory: 128Mi
+      # requests:
+      #   cpu: 100m
+      #   memory: 128Mi
 
-  podAnnotations: {}
+    serviceAccount:
+      # Specifies whether a service account should be created
+      create: true
+      # Annotations to add to the service account
+      annotations: {}
+      # The name of the service account to use.
+      # If not set and create is true, a name is generated using the fullname template
+      name: ""
 
-  podSecurityContext: {}
-    # fsGroup: 2000
+    podAnnotations: {}
 
-  securityContext: {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
+    podSecurityContext: {}
+      # fsGroup: 2000
 
-  service:
-    type: ClusterIP
-    port: 80
+    securityContext: {}
+      # capabilities:
+      #   drop:
+      #   - ALL
+      # readOnlyRootFilesystem: true
+      # runAsNonRoot: true
+      # runAsUser: 1000
 
-  ingress:
-    enabled: false
-    className: ""
-    annotations: {}
-      # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
-    hosts:
-      - host: chart-example.local
-        paths:
-          - path: /
-            pathType: ImplementationSpecific
-    tls: []
-    #  - secretName: chart-example-tls
-    #    hosts:
-    #      - chart-example.local
+    service:
+      type: ClusterIP
+      port: 80
+
+    ingress:
+      enabled: false
+      className: ""
+      annotations: {}
+        # kubernetes.io/ingress.class: nginx
+        # kubernetes.io/tls-acme: "true"
+      hosts:
+        - host: chart-example.local
+          paths:
+            - path: /
+              pathType: ImplementationSpecific
+      tls: []
+      #  - secretName: chart-example-tls
+      #    hosts:
+      #      - chart-example.local
 
 
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
-    # targetMemoryUtilizationPercentage: 80
+    autoscaling:
+      enabled: false
+      minReplicas: 1
+      maxReplicas: 100
+      targetCPUUtilizationPercentage: 80
+      # targetMemoryUtilizationPercentage: 80
 
-  nodeSelector: {}
+    nodeSelector: {}
 
-  tolerations: []
+    tolerations: []
 
-  affinity: {}
-
+    affinity: {}
+  agent:
+    image:
+      repository: 387875775441.dkr.ecr.us-east-1.amazonaws.com/tricorder-agent
+      pullPolicy: IfNotPresent
+      # Overrides the image tag whose default is the chart appVersion.
+      tag: "v0.0.1"
 
 ui:
   resources: {}
@@ -192,18 +202,6 @@ ui:
   tolerations: []
 
   affinity: {}
-
-agent:
-  image:
-    repository: 387875775441.dkr.ecr.us-east-1.amazonaws.com/tricorder-agent
-    pullPolicy: IfNotPresent
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.0.1"
-
-imagePullSecrets: []
-nameOverride: ""
-fullnameOverride: ""
-
 
 timescaledb-single:
   enabled: true

@@ -15,4 +15,5 @@ helm upgrade --install --create-namespace --cleanup-on-fail -n tricorder my-tric
 ```
 
 ## Sub-charts
+- [starship](./charts/starship/README.md)
 - [tricorder-demo](./charts/tricorder-demo/README.md)

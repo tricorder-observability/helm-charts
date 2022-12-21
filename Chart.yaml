@@ -22,6 +22,8 @@ dependencies:
     version: 14.6.0
     repository: "https://charts.timescale.com"
     condition: promscale.enabled
+  - name: starship
+    version: 0.0.9
 
 # TODO(jian)
   # - name: kube-state-metrics

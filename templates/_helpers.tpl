@@ -51,23 +51,12 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Create the name of the apiServer service account to use
-*/}}
-{{- define "tricorder.apiServer.serviceAccountName" -}}
-{{- if .Values.apiServer.serviceAccount.create }}
-{{- default (include "tricorder.fullname" .) .Values.apiServer.serviceAccount.name }}
-{{- else }}
-{{- default "tricorder-api-server" .Values.apiServer.serviceAccount.name }}
-{{- end }}
-{{- end }}
-
-{{/*
 Create the name of the ui service account to use
 */}}
 {{- define "tricorder.ui.serviceAccountName" -}}
 {{- if .Values.ui.serviceAccount.create }}
 {{- default (include "tricorder.fullname" .) .Values.ui.serviceAccount.name }}
 {{- else }}
-{{- default "tricorder-ui" .Values.ui.serviceAccount.name }}
+{{- default "starship-ui" .Values.ui.serviceAccount.name }}
 {{- end }}
 {{- end }}
