@@ -226,22 +226,6 @@ timescaledb-single:
       PATRONI_REPLICATION_PASSWORD: "tricorder"
       PATRONI_admin_PASSWORD: "tricorder"
 
-    # Selector used to provision your own Secret containing patroni configuration details
-    # This is mutually exclusive with `credentials` option and takes precedence over it.
-    # WARNING: Use this option with caution
-    credentialsSecretName: ""
-
-    # This map should contain tls key and certifiacte. When empty,
-    # helm will generate self-signed certificate.
-    certificate:
-      tls.crt: ""
-      tls.key: ""
-
-    # Selector used to provision your own Secret containing certificate details.
-    # This is mutually exclusive with `certificate` option and takes precedence over it.
-    # WARNING: Use this option with caution
-    certificateSecretName: ""
-
     # This secret should contain environment variables that influence pgBackRest.
     pgbackrest:
       PGBACKREST_REPO1_S3_REGION: ""
