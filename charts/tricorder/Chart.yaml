@@ -9,7 +9,7 @@ maintainers:
   - name: JaredTan95
   - name: yaxiong-zhao
 
-version: 0.0.3
+version: 0.0.4
 
 appVersion: "1.16.0"
 
@@ -27,6 +27,6 @@ dependencies:
     repository: "https://prometheus-community.github.io/helm-charts"
     condition: kube-prometheus-stack.enabled
   - name: starship
-    version: 0.0.11
+    version: 0.0.12
   - name: ui
-    version: 0.0.10
+    version: 0.0.12

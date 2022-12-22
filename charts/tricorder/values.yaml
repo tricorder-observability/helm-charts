@@ -19,7 +19,7 @@ starship:
     command:
       extraArgs:
         - --module_db_path=/tricorder/http/tricorder.db
-        - --pg_url=postgresql://postgres:tricorder@timescaledb:5432/tricorder
+        #- --pg_url=postgresql://postgres:tricorder@timescaledb:5432/tricorder
 
   # Configuration for ports
     ports:
@@ -469,7 +469,7 @@ timescaledb-single:
   service:
     primary:
       # One of (ClusterIP | LoadBalancer | NodePort). Headless services are not supported.
-      type: NodePort
+      type: ClusterIP
       # The port used by the service.
       port: 5432
       # Additional labels to be added to the Service.
@@ -649,7 +649,7 @@ timescaledb-single:
   # Prometheus exporter for PostgreSQL server metrics.
   # https://github.com/prometheus-community/postgres_exporter
   prometheus:
-    enabled: false
+    enabled: true
     image:
       repository: quay.io/prometheuscommunity/postgres-exporter
       tag: v0.11.1
@@ -843,25 +843,13 @@ kube-prometheus-stack:
           # traceIdLabelName: trace_id
 
     additionalDataSources:
-    # - name: prometheus-sample
-    #   access: proxy
-    #   basicAuth: true
-    #   basicAuthPassword: pass
-    #   basicAuthUser: daco
-    #   editable: false
-    #   jsonData:
-    #       tlsSkipVerify: true
-    #   orgId: 1
-    #   type: prometheus
-    #   url: https://{{ printf "%s-prometheus.svc" .Release.Name }}:9090
-    #   version: 1
       - name: Tricorder-Storage-Connector
         isDefault: true
         uid: tricorder_storage_connector
         access: proxy
         editable: false
         type: prometheus
-        url: https://{{ printf "%s-promscale.svc" .Release.Name }}:9201
+        url: http://{{ printf "%s-promscale" .Release.Name }}:9201
         version: 1
       - name: TimescaleDB-Tricorder
         uid: timescaledb_tricorder
@@ -891,10 +879,38 @@ kube-prometheus-stack:
         secureJsonData:
           password: tricorder
         version: 1
+    serviceMonitor:
+      enabled: true
+      labels:
+        release: prometheus
+      interval: ""
+      tlsConfig: {}
 
-    service:
-      type: NodePort
-      portName: http-web
+  prometheus:
+    enabled: true
+    prometheusSpec:
+      scrapeInterval: "10s"
+      ## The remote_write spec configuration for Prometheus.
+      ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#remotewritespec
+      remoteWrite:
+        - url: "{{ .Values.global.exporters.metric.scheme }}://{{ .Values.global.exporters.metric.host }}:{{ .Values.global.exporters.metric.port }}{{ .Values.global.exporters.metric.path }}"
 
-  prometheusOperator:
-    enabled: false
+      remoteWrite:
+        - url: "http://{{ .Release.Name }}-promscale:9201/write"
+          remoteTimeout: 100s
+          queueConfig:
+            capacity: 100000
+            maxSamplesPerSend: 10000
+            batchSendDeadline: 30s
+            minShards: 20
+            maxShards: 20
+            minBackoff: 100ms
+            maxBackoff: 10s
+
+      resources:
+        requests:
+          cpu: 100m
+          memory: 512Mi
+        limits:
+          cpu: 2
+          memory: 2048Mi
