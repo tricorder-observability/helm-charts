@@ -14,17 +14,9 @@ version: 0.0.4
 appVersion: "1.16.0"
 
 dependencies:
-  - name: timescaledb-single
-    version: 0.27.2
+  - name: tobs
+    version: 20.4.0
     repository: "https://charts.timescale.com"
-    condition: timescaledb-single.enabled
-  - name: promscale
-    version: 14.6.0
-    repository: "https://charts.timescale.com"
-    condition: promscale.enabled
-  - name: kube-prometheus-stack
-    version: 41.7.3
-    repository: "https://prometheus-community.github.io/helm-charts"
-    condition: kube-prometheus-stack.enabled
+    condition: tobs.enabled
   - name: starship
     version: 0.0.12
