@@ -7,6 +7,20 @@ nameOverride: ""
 fullnameOverride: ""
 
 starship:
+  serviceAccount:
+    # Specifies whether a service account should be created
+    create: true
+    # Annotations to add to the service account
+    annotations: {}
+    # The name of the service account to use.
+    # If not set and create is true, a name is generated using the fullname template
+    name: "starship"
+
+  replicaCount: 1
+  service:
+    type: ClusterIP
+    port: 80
+
   apiServer:
     image:
       repository: public.ecr.aws/w3q2q1s5/api-server
@@ -14,16 +28,13 @@ starship:
       # Overrides the image tag whose default is the chart appVersion.
       tag: "v0.1-2022-12-22_17-17"
 
-    replicaCount: 1
-
     command:
       extraArgs:
         - --module_db_path=/tricorder/http/tricorder.db
         - --pg_url=postgresql://postgres:tricorder@timescaledb:5432/tricorder
 
-  # Configuration for ports
     ports:
-      http:
+      serverhttp:
         enabled: true
         containerPort: 8080
         servicePort: 8080
@@ -36,184 +47,61 @@ starship:
         hostPort: 50051
         protocol: TCP
 
-    resources: {}
-      # We usually recommend not to specify default resources and to leave this as a conscious
-      # choice for the user. This also increases chances charts run on environments with little
-      # resources, such as Minikube. If you do want to specify resources, uncomment the following
-      # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-      # limits:
-      #   cpu: 100m
-      #   memory: 128Mi
-      # requests:
-      #   cpu: 100m
-      #   memory: 128Mi
+    resources:
+      limits:
+        cpu: 400m
+        memory: 500Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
 
-    serviceAccount:
-      # Specifies whether a service account should be created
-      create: true
-      # Annotations to add to the service account
-      annotations: {}
-      # The name of the service account to use.
-      # If not set and create is true, a name is generated using the fullname template
-      name: ""
-
-    podAnnotations: {}
-
-    podSecurityContext: {}
-      # fsGroup: 2000
-
-    securityContext: {}
-      # capabilities:
-      #   drop:
-      #   - ALL
-      # readOnlyRootFilesystem: true
-      # runAsNonRoot: true
-      # runAsUser: 1000
-
-    service:
-      type: ClusterIP
-      port: 80
-
-    ingress:
-      enabled: false
-      className: ""
-      annotations: {}
-        # kubernetes.io/ingress.class: nginx
-        # kubernetes.io/tls-acme: "true"
-      hosts:
-        - host: chart-example.local
-          paths:
-            - path: /
-              pathType: ImplementationSpecific
-      tls: []
-      #  - secretName: chart-example-tls
-      #    hosts:
-      #      - chart-example.local
-
-
-    autoscaling:
-      enabled: false
-      minReplicas: 1
-      maxReplicas: 100
-      targetCPUUtilizationPercentage: 80
-      # targetMemoryUtilizationPercentage: 80
-
-    nodeSelector: {}
-
-    tolerations: []
-
-    affinity: {}
   agent:
     image:
       repository: public.ecr.aws/w3q2q1s5/tricorder-agent
-      pullPolicy: Always
+      pullPolicy: IfNotPresent
       # Overrides the image tag whose default is the chart appVersion.
       tag: "v0.1-2022-12-22_17-17"
 
-ui:
-  resources: {}
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
-  image:
-    repository: public.ecr.aws/w3q2q1s5/mgmt-ui
-    pullPolicy: Always
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.1-2022-12-22_17-17"
+  ui:
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+    image:
+      repository: public.ecr.aws/w3q2q1s5/mgmt-ui
+      pullPolicy: IfNotPresent
+      # Overrides the image tag whose default is the chart appVersion.
+      tag: "v0.1-2022-12-22_17-17"
 
-  # Configuration for ports
-  ports:
-    http:
-      enabled: true
-      containerPort: 80
-      servicePort: 80
-      hostPort: 80
-      protocol: TCP
-  resources: {}
-    # We usually recommend not to specify default resources and to leave this as a conscious
-    # choice for the user. This also increases chances charts run on environments with little
-    # resources, such as Minikube. If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
-
-  serviceAccount:
-    # Specifies whether a service account should be created
-    create: true
-    # Annotations to add to the service account
-    annotations: {}
-    # The name of the service account to use.
-    # If not set and create is true, a name is generated using the fullname template
-    name: ""
-
-  podAnnotations: {}
-
-  podSecurityContext: {}
-    # fsGroup: 2000
-
-  securityContext: {}
-    # capabilities:
-    #   drop:
-    #   - ALL
-    # readOnlyRootFilesystem: true
-    # runAsNonRoot: true
-    # runAsUser: 1000
-
-  service:
-    type: ClusterIP
-    port: 80
-
-  ingress:
-    enabled: false
-    className: ""
-    annotations: {}
-      # kubernetes.io/ingress.class: nginx
-      # kubernetes.io/tls-acme: "true"
-    hosts:
-      - host: chart-example.local
-        paths:
-          - path: /
-            pathType: ImplementationSpecific
-    tls: []
-    #  - secretName: chart-example-tls
-    #    hosts:
-    #      - chart-example.local
-
-
-  autoscaling:
-    enabled: false
-    minReplicas: 1
-    maxReplicas: 100
-    targetCPUUtilizationPercentage: 80
-    # targetMemoryUtilizationPercentage: 80
-
-  nodeSelector: {}
-
-  tolerations: []
-
-  affinity: {}
+    ports:
+      uihttp:
+        enabled: true
+        containerPort: 80
+        servicePort: 80
+        hostPort: 80
+        protocol: TCP
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
 
 timescaledb-single:
   enabled: true
   # This file and its contents are licensed under the Apache License 2.0.
   # Please see the included NOTICE for copyright information and LICENSE for a copy of the license.
 
-  replicaCount: 1
+  replicaCount: 3
 
   # To prevent very long names, we override the name, otherwise it would default to
   # timescaledb-single (the name of the chart)
   fullnameOverride: timescaledb
+  clusterName: "{{ .Release.Name }}-tsdb"
 
   # By default those secrets are randomly generated.
   # To prevent misconfiguration, modifications from helm upgrade won't be applied to those secrets.
@@ -340,116 +228,17 @@ timescaledb-single:
   #   - any context sensitive parameter (scope, namespace, name) will be overridden by the Kubernetes context
   # https://patroni.readthedocs.io/en/latest/SETTINGS.html#settings
   patroni:
-    log:
-      level: WARNING
-    # https://patroni.readthedocs.io/en/latest/replica_bootstrap.html#bootstrap
     bootstrap:
-      method: restore_or_initdb
-      restore_or_initdb:
-        command: >
-          /etc/timescaledb/scripts/restore_or_initdb.sh
-          --encoding=UTF8
-          --locale=C.UTF-8
-        keep_existing_recovery_conf: true
-      post_init: /etc/timescaledb/scripts/post_init.sh
       dcs:
-        loop_wait: 60
-        ttl: 180
-        retry_timeout: 60
-        maximum_lag_on_failover: 33554432
         postgresql:
           parameters:
-            archive_command: "/etc/timescaledb/scripts/pgbackrest_archive.sh %p"
-            archive_mode: 'on'
-            archive_timeout: 1800s
-            #
-            # Autovacuuming is very important to PostgreSQL. For TimescaleDB, in
-            # most usecases the vacuuming part is of less importance (there are no deleted tuples to prune)
-            # however, the autoanalyze bit (updating the statistics of the chunks) is important to help
-            # in planning queries. Therefore we do some tuning of autovacuum to address these
-            # TimescaleDB specific concerns.
-            # We'd rather have autovacuum do things early, as this increases the changes that autovacuum
-            # will find the buffers it needs in shared_buffers, instead of having to fetch them from disk.
-            #
-            autovacuum_analyze_scale_factor: 0.02
-            # This allows us to auto-analyze at most 120 (pretty much empty) chunks every 5 seconds
-            # This will ensure that we can have up-to-date statistics on inserts very, very quickly
-            autovacuum_naptime: 5s
-            autovacuum_max_workers: 10
-            # We don't want vacuum work to be building up, therefore we increase
-            # the cost limit so that the work to be done for vacuum will be done quickly.
-            autovacuum_vacuum_cost_limit: 500
-            autovacuum_vacuum_scale_factor: 0.05
-            log_autovacuum_min_duration: 1min
-            hot_standby: 'on'
-            log_checkpoints: 'on'
-            log_connections: 'on'
-            log_disconnections: 'on'
-            log_line_prefix: "%t [%p]: [%c-%l] %u@%d,app=%a [%e] "
-            log_lock_waits: 'on'
-            log_min_duration_statement: '1s'
-            log_statement: ddl
-            max_connections: 100
-            max_prepared_transactions: 150
-            shared_preload_libraries: timescaledb,pg_stat_statements
-            ssl: 'on'
-            ssl_cert_file: '/etc/certificate/tls.crt'
-            ssl_key_file: '/etc/certificate/tls.key'
-            tcp_keepalives_idle: 900
-            tcp_keepalives_interval: 100
-            temp_file_limit: 1GB
-            timescaledb.passfile: '../.pgpass'
-            unix_socket_directories: "/var/run/postgresql"
-            unix_socket_permissions: '0750'
-            wal_level: hot_standby
-            wal_log_hints: 'on'
-          use_pg_rewind: true
-          use_slots: true
-    kubernetes:
-      role_label: role
-      scope_label: cluster-name
-      use_endpoints: true
-    postgresql:
-      create_replica_methods:
-      - pgbackrest
-      - basebackup
-      pgbackrest:
-        command: /etc/timescaledb/scripts/pgbackrest_restore.sh
-        keep_data: true
-        no_params: true
-        no_master: true
-      basebackup:
-      - waldir: "/var/lib/postgresql/wal/pg_wal"
-      recovery_conf:
-        restore_command: /etc/timescaledb/scripts/pgbackrest_archive_get.sh %f "%p"
-      callbacks:
-        on_role_change: /etc/timescaledb/scripts/patroni_callback.sh
-        on_start: /etc/timescaledb/scripts/patroni_callback.sh
-        on_reload: /etc/timescaledb/scripts/patroni_callback.sh
-        on_restart: /etc/timescaledb/scripts/patroni_callback.sh
-        on_stop: /etc/timescaledb/scripts/patroni_callback.sh
-      authentication:
-        replication:
-          username: standby
-        superuser:
-          username: postgres
-      listen: 0.0.0.0:5432
-      pg_hba:
-      - local     all             postgres                              peer
-      - local     all             all                                   md5
-      - hostnossl all,replication all                all                reject
-      - hostssl   all             all                127.0.0.1/32       md5
-      - hostssl   all             all                ::1/128            md5
-      - hostssl   replication     standby            all                md5
-      - hostssl   all             all                all                md5
-      use_unix_socket: true
-    restapi:
-      listen: 0.0.0.0:8008
-
-  callbacks:
-    # If set, this configMap will be used for the Patroni callbacks.
-    configMap:  # example-patroni-callbacks
-
+            checkpoint_timeout: 15min
+            bgwriter_delay: 10ms
+            bgwriter_lru_maxpages: 100000
+            # synchronous_commit: "off"
+            shared_preload_libraries: timescaledb,pg_stat_statements,pg_stat_monitor,pg_stat_kcache
+            # TODO: stats_temp_directory was deprectated on PG15, we should remove it when the DB upgrades.
+            stats_temp_directory: /tmp/pg_stat_temp
   postInit:
     # A list of sources, that contain post init scripts.
     # https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#projectedvolumesource-v1-core
@@ -563,18 +352,6 @@ timescaledb-single:
     #   memory: 128Mi
 
   sharedMemory:
-    # By default Kubernetes only provides 64MB to /dev/shm
-    # /dev/shm is only used by PostgreSQL for work_mem for parallel workers,
-    # so most will not run into this issue.
-    # https://github.com/kubernetes/kubernetes/issues/28272
-    #
-    # If you do however run into:
-    #
-    #   SQLSTATE 53100
-    #   ERROR:  could not resize shared memory segment "/PostgreSQL.12345" to 4194304 bytes:
-    #   No space left on device
-    #
-    # you may wish to use a mount to Memory, by setting useMount to true
     useMount: false
 
   # timescaledb-tune will be run with the Pod resources requests or - if not set - its limits.
@@ -643,9 +420,6 @@ timescaledb-single:
     #   - protocol: TCP
     #       port: 11111
 
-  # https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodeselector
-  nodeSelector: {}
-
   # Prometheus exporter for PostgreSQL server metrics.
   # https://github.com/prometheus-community/postgres_exporter
   prometheus:
@@ -700,44 +474,6 @@ timescaledb-single:
   # deployments, it is set to OrderedReady here
   podManagementPolicy: OrderedReady
 
-  # Annotations that are applied to each pod in the stateful set
-  # https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
-  podAnnotations: {}
-
-  # Labels that are applied to each pod in the stateful set
-  # https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
-  podLabels: {}
-
-  # https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
-  tolerations: []
-
-  # https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
-  affinityTemplate: |
-    podAntiAffinity:
-      preferredDuringSchedulingIgnoredDuringExecution:
-      - weight: 100
-        podAffinityTerm:
-          topologyKey: "kubernetes.io/hostname"
-          labelSelector:
-            matchLabels:
-              app: {{ template "timescaledb.fullname" . }}
-              release: {{ .Release.Name | quote }}
-              cluster-name: {{ template "clusterName" . }}
-      - weight: 50
-        podAffinityTerm:
-          topologyKey: failure-domain.beta.kubernetes.io/zone
-          labelSelector:
-            matchLabels:
-              app: {{ template "timescaledb.fullname" . }}
-              release: {{ .Release.Name | quote }}
-              cluster-name: {{ template "clusterName" . }}
-  affinity: {}
-
-  ## Use an alternate scheduler, e.g. "stork".
-  ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
-  ##
-  # schedulerName:
-
   rbac:
     # Specifies whether RBAC resources should be created
     create: true
@@ -759,6 +495,8 @@ timescaledb-single:
 
 promscale:
   enabled: true
+  extraArgs:
+    - "--metrics.high-availability=true"
   connection:
     # Database connection settings. If `uri` is not
     # set then the specific user, pass, host, port and
@@ -773,6 +511,13 @@ promscale:
     # database name in which to store the metrics
     # must be created before start
     dbName: tsdb
+  resources:
+    requests:
+      cpu: 50m
+      memory: 500Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
 
 kube-prometheus-stack:
   enabled: true
@@ -780,7 +525,7 @@ kube-prometheus-stack:
     enabled: false
   grafana:
     enabled: true
-    defaultDashboardsTimezone: Asia/Shanghai
+    #defaultDashboardsTimezone: Asia/Shanghai
     adminPassword: tricorder
     image:
       repository: public.ecr.aws/w3q2q1s5/tricorder-frontend
@@ -793,11 +538,22 @@ kube-prometheus-stack:
         cpu: 10m
         memory: 128Mi
       limits:
-        cpu: 1
+        cpu: "1"
         memory: 2Gi
     sidecar:
       dashboards:
         enabled: true
+        files:
+          - dashboards/k8s-cluster.json
+          - dashboards/k8s-hardware.json
+          - dashboards/apm-dependencies.json
+          - dashboards/apm-home.json
+          - dashboards/apm-service-dependencies-downstream.json
+          - dashboards/apm-service-dependencies-upstream.json
+          - dashboards/apm-service-overview.json
+          - dashboards/promscale.json
+          - dashboards/postgres-overview.json
+          - dashboards/postgres-details.json
         label: grafana_dashboard
         labelValue: "1"
         ## Annotations for Grafana dashboard configmaps
@@ -813,34 +569,32 @@ kube-prometheus-stack:
 
       datasources:
         enabled: true
+        label: tricorder_datasource
+        labelValue: "true"
         defaultDatasourceEnabled: false
 
-        uid: prometheus
-
-        ## URL of prometheus datasource
-        ##
-        # url: http://prometheus-stack-prometheus:9090/
-
-        # If not defined, will use prometheus.prometheusSpec.scrapeInterval or its default
-        defaultDatasourceScrapeInterval: 60s
-
-        ## Annotations for Grafana datasource configmaps
-        ##
-        annotations: {}
-
-        ## Create datasource for each Pod of Prometheus StatefulSet;
-        ## this uses headless service `prometheus-operated` which is
-        ## created by Prometheus Operator
-        ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/0fee93e12dc7c2ea1218f19ae25ec6b893460590/pkg/prometheus/statefulset.go#L255-L286
-        createPrometheusReplicasDatasources: false
-        label: grafana_datasource
-        labelValue: "1"
-
-        ## Field with internal link pointing to existing data source in Grafana.
-        ## Can be provisioned via additionalDataSources
-        exemplarTraceIdDestinations: {}
-          # datasourceUid: Jaeger
-          # traceIdLabelName: trace_id
+    prometheus:
+      datasource:
+        enabled: true
+        # By default url of data source is set to ts-prom connector instance
+        # deployed with this chart. If a connector isn't used this should be
+        # set to the prometheus-server.
+        url: "http://{{ .Release.Name }}-promscale.{{ .Release.Namespace }}.svc:9201"
+    timescale:
+      datasource:
+        enabled: true
+        user: grafana
+        # leaving password empty will cause helm to generate a random password
+        pass: "tricorder"
+        dbName: postgres
+        sslMode: require
+        # By default the url/host is set to the db instance deployed
+        # with this chart
+        host: "timescaledb.{{ .Release.Namespace }}.svc"
+        port: 5432
+    jaeger:
+      # Endpoint for integrating jaeger datasource in grafana. This should point to HTTP endpoint, not gRPC.
+      promscaleTracesQueryEndPoint: "{{ .Release.Name }}-promscale.{{ .Release.Namespace }}.svc:9201"
 
     additionalDataSources:
       - name: Tricorder-Storage-Connector
@@ -889,14 +643,17 @@ kube-prometheus-stack:
   prometheus:
     enabled: true
     prometheusSpec:
+      scrapeInterval: "1m"
+      evaluationInterval: "1m"
       scrapeInterval: "10s"
-      ## The remote_write spec configuration for Prometheus.
-      ## ref: https://github.com/prometheus-operator/prometheus-operator/blob/main/Documentation/api.md#remotewritespec
-      remoteWrite:
-        - url: "{{ .Values.global.exporters.metric.scheme }}://{{ .Values.global.exporters.metric.host }}:{{ .Values.global.exporters.metric.port }}{{ .Values.global.exporters.metric.path }}"
+      replicas: 2
+      retention: 7d
+      replicaExternalLabelName: "__replica__"
+      # Promscale requires a cluster label to be present for high availability mode.
+      prometheusExternalLabelName: "cluster"
 
       remoteWrite:
-        - url: "http://{{ .Release.Name }}-promscale:9201/write"
+        - url: "http://{{ .Release.Name }}-promscale.{{ .Release.Namespace }}.svc:9201/write"
           remoteTimeout: 100s
           queueConfig:
             capacity: 100000
@@ -912,5 +669,5 @@ kube-prometheus-stack:
           cpu: 100m
           memory: 512Mi
         limits:
-          cpu: 2
+          cpu: "1"
           memory: 2048Mi

@@ -28,5 +28,3 @@ dependencies:
     condition: kube-prometheus-stack.enabled
   - name: starship
     version: 0.0.12
-  - name: ui
-    version: 0.0.12

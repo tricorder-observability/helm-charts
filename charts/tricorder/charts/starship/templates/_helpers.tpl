@@ -1,11 +1,11 @@
 {{/*
-Create the name of the apiServer service account to use
+Create the name of the service account to use
 */}}
-{{- define "tricorder.apiServer.serviceAccountName" -}}
-{{- if .Values.apiServer.serviceAccount.create }}
-{{- default (include "tricorder.fullname" .) .Values.apiServer.serviceAccount.name }}
+{{- define "tricorder.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create }}
+{{- default (include "tricorder.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
-{{- default "starship-api-server" .Values.apiServer.serviceAccount.name }}
+{{- default "starship" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
 
@@ -20,4 +20,23 @@ Create the name of the apiServer service account to use
   protocol: {{ $port.protocol }}
 {{- end }}
 {{- end }}
+{{- end }}
+
+{{/* Build the list of port for deployment service */}}
+{{- define "tricorder.ui.svc.ports" -}}
+{{- $ports := deepCopy .Values.ui.ports }}
+{{- range $key, $port := $ports }}
+{{- if $port.enabled }}
+- name: {{ $key }}
+  port: {{ $port.servicePort }}
+  targetPort: {{ $port.servicePort }}
+  protocol: {{ $port.protocol }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/* Build the list of port for deployment service */}}
+{{- define "tricorder.svc.ports" -}}
+{{ include "tricorder.apiServer.svc.ports" . }}
+{{ include "tricorder.ui.svc.ports" . }}
 {{- end }}
