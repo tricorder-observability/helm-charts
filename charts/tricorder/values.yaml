@@ -9,17 +9,17 @@ fullnameOverride: ""
 starship:
   apiServer:
     image:
-      repository: 387875775441.dkr.ecr.us-east-1.amazonaws.com/api-server
+      repository: public.ecr.aws/w3q2q1s5/api-server
       pullPolicy: Always
       # Overrides the image tag whose default is the chart appVersion.
-      tag: "v0.0.5"
+      tag: "v0.1-2022-12-22_17-17"
 
     replicaCount: 1
 
     command:
       extraArgs:
         - --module_db_path=/tricorder/http/tricorder.db
-        #- --pg_url=postgresql://postgres:tricorder@timescaledb:5432/tricorder
+        - --pg_url=postgresql://postgres:tricorder@timescaledb:5432/tricorder
 
   # Configuration for ports
     ports:
@@ -108,7 +108,7 @@ starship:
       repository: public.ecr.aws/w3q2q1s5/tricorder-agent
       pullPolicy: Always
       # Overrides the image tag whose default is the chart appVersion.
-      tag: "v0.0.6"
+      tag: "v0.1-2022-12-22_17-17"
 
 ui:
   resources: {}
@@ -126,7 +126,7 @@ ui:
     repository: public.ecr.aws/w3q2q1s5/mgmt-ui
     pullPolicy: Always
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.0.9"
+    tag: "v0.1-2022-12-22_17-17"
 
   # Configuration for ports
   ports:

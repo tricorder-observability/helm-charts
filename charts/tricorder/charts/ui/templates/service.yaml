@@ -7,10 +7,6 @@ metadata:
     {{- include "tricorder.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
-  ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
-      protocol: TCP
-      name: http
+  ports: {{ include "tricorder.ui.svc.ports" . | nindent 4 }}
   selector:
     {{- include "tricorder.selectorLabels" . | nindent 4 }}
