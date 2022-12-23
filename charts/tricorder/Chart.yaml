@@ -9,9 +9,9 @@ maintainers:
   - name: JaredTan95
   - name: yaxiong-zhao
 
-version: 0.0.4
+version: 0.1.0
 
-appVersion: "1.16.0"
+appVersion: "v0.1.0"
 
 dependencies:
   - name: timescaledb-single
@@ -27,4 +27,4 @@ dependencies:
     repository: "https://prometheus-community.github.io/helm-charts"
     condition: kube-prometheus-stack.enabled
   - name: starship
-    version: 0.0.12
+    version: 0.1.0
