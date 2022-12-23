@@ -49,3 +49,72 @@ Selector labels
 app.kubernetes.io/name: {{ include "tricorder.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/*
+Allow the release namespace to be overridden
+*/}}
+{{- define "tricorder.namespace" -}}
+  {{- if .Values.namespaceOverride -}}
+    {{- .Values.namespaceOverride -}}
+  {{- else -}}
+    {{- .Release.Namespace -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
+Extract the password from db uri
+*/}}
+{{- define "tricorder.dburi.password" -}}
+  {{- $values := urlParse .Values.promscale.connection.uri }}
+  {{- $userInfo := get $values "userinfo" }}
+  {{- $userDetails :=  split ":" $userInfo }}
+  {{- $pwd := $userDetails._1 }}
+  {{- printf $pwd -}}
+{{- end -}}
+
+{{/*
+Set Grafana Datasource Connection Password
+*/}}
+{{- define "tricorder.grafana.datasource.connection.password" -}}
+{{- $kubePrometheus := index .Values "kube-prometheus-stack" -}}
+{{- $isDBURI := ne .Values.promscale.connection.uri "" -}}
+{{- $grafanaDatasourcePasswd := ternary (include "tricorder.dburi.password" . ) ($kubePrometheus.grafana.timescale.datasource.pass) ($isDBURI) -}}
+  {{- if ne $grafanaDatasourcePasswd "" -}}
+    {{- printf $grafanaDatasourcePasswd -}}
+  {{- else -}}
+    {{- printf "${GRAFANA_PASSWORD}" -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
+Extract the username from db uri
+*/}}
+{{- define "tricorder.dburi.user" -}}
+  {{- $values := urlParse .Values.promscale.connection.uri }}
+  {{- $userInfo := get $values "userinfo" }}
+  {{- $userDetails :=  split ":" $userInfo }}
+  {{- $user := $userDetails._0 }}
+  {{- printf $user -}}
+{{- end -}}
+
+{{/*
+Extract the sslmode from db uri
+*/}}
+{{- define "tricorder.dburi.sslmode" -}}
+  {{- $values := urlParse .Values.promscale.connection.uri }}
+  {{- $queryInfo := get $values "query" }}
+  {{- $sslInfo := regexFind "ssl[mM]ode=[^&]+" $queryInfo}}
+  {{- $sslDetails := split "=" $sslInfo }}
+  {{- $sslMode := $sslDetails._1 }}
+  {{- printf $sslMode -}}
+{{- end -}}
+
+{{/*
+Extract the dbname from db uri
+*/}}
+{{- define "tricorder.dburi.dbname" -}}
+  {{- $values := urlParse .Values.promscale.connection.uri }}
+  {{- $dbDetails := get $values "path" }}
+  {{- $dbName := trimPrefix "/" $dbDetails }}
+  {{- printf $dbName -}}
+{{- end -}}

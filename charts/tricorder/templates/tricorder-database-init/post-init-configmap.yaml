@@ -7,12 +7,22 @@ data:
   db-init.sh: >
     #!/bin/bash
 
-    psql -d "$1" <<__SQL__
+    psql -U postgres -c "CREATE DATABASE tsdb WITH OWNER postgres";
 
-    CREATE DATABASE tsdb WITH OWNER postgres;
+    psql -U postgres -c "CREATE DATABASE tricorder WITH OWNER postgres"
 
-    CREATE DATABASE tricorder WITH OWNER postgres;
+    psql -U postgres -c "\l"
 
+    psql -U postgres -d tricorder -c   "CREATE TABLE IF NOT EXISTS http (
+        time TIMESTAMP WITH TIME ZONE NOT NULL,
+        id TEXT NOT NULL,
+        method TEXT,
+        proto TEXT,
+        url TEXT,
+        header TEXT,
+        body TEXT,
+        PRIMARY KEY(time, id)
+      );
     CREATE TABLE IF NOT EXISTS http (
          time TIMESTAMP WITH TIME ZONE NOT NULL,
          id TEXT NOT NULL,
@@ -27,5 +37,4 @@ data:
     SELECT create_hypertable('http', 'time', chunk_time_interval => INTERVAL '1
     hour');
 
-    SELECT add_retention_policy('http', INTERVAL '1 days');
-    __SQL__
+    SELECT add_retention_policy('http', INTERVAL '1 days');"

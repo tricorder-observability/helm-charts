@@ -96,12 +96,12 @@ timescaledb-single:
   # This file and its contents are licensed under the Apache License 2.0.
   # Please see the included NOTICE for copyright information and LICENSE for a copy of the license.
 
-  replicaCount: 3
+  replicaCount: 1
 
   # To prevent very long names, we override the name, otherwise it would default to
   # timescaledb-single (the name of the chart)
   fullnameOverride: timescaledb
-  clusterName: "{{ .Release.Name }}-tsdb"
+  #clusterName: "{{ .Release.Name }}-tsdb"
 
   # By default those secrets are randomly generated.
   # To prevent misconfiguration, modifications from helm upgrade won't be applied to those secrets.
@@ -246,13 +246,9 @@ timescaledb-single:
     # in sorted order only once: After a cluster initialization
     # Some examples:
     - configMap:
-        name: custom-init-scripts
-        optional: true
-    - configMap:
         name: tricorder-db-post-init
     - secret:
         name: custom-secret-scripts
-        optional: true
 
   # Values for defining the primary & replica Kubernetes Services.
   service:
@@ -341,15 +337,10 @@ timescaledb-single:
       #   size: 5Gi
       #   storageClass: gp2
 
-  resources: {}
-    # If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 2Gi
 
   sharedMemory:
     useMount: false
@@ -495,8 +486,10 @@ timescaledb-single:
 
 promscale:
   enabled: true
+  replicaCount: 3
   extraArgs:
     - "--metrics.high-availability=true"
+  #connectionSecretName: "tricorder-promscale-connection"
   connection:
     # Database connection settings. If `uri` is not
     # set then the specific user, pass, host, port and
@@ -541,7 +534,16 @@ kube-prometheus-stack:
         cpu: "1"
         memory: 2Gi
     sidecar:
+      datasources:
+        enabled: true
+        label: tricorder_datasource
+        labelValue: "true"
+        defaultDatasourceEnabled: false
+
       dashboards:
+        multicluster:
+          global:
+            enabled: false
         enabled: true
         files:
           - dashboards/k8s-cluster.json
@@ -554,25 +556,12 @@ kube-prometheus-stack:
           - dashboards/promscale.json
           - dashboards/postgres-overview.json
           - dashboards/postgres-details.json
-        label: grafana_dashboard
-        labelValue: "1"
-        ## Annotations for Grafana dashboard configmaps
-        ##
-        annotations: {}
-        multicluster:
-          global:
-            enabled: false
-          etcd:
-            enabled: false
-        provider:
-          allowUiUpdates: true
-
-      datasources:
-        enabled: true
-        label: tricorder_datasource
-        labelValue: "true"
-        defaultDatasourceEnabled: false
-
+          - dashboards/demo-ebpf-http.json
+    persistence:
+      type: pvc
+      enabled: true
+      accessModes:
+        - ReadWriteOnce
     prometheus:
       datasource:
         enabled: true
@@ -583,28 +572,22 @@ kube-prometheus-stack:
     timescale:
       datasource:
         enabled: true
-        user: grafana
+        user: postgres
         # leaving password empty will cause helm to generate a random password
         pass: "tricorder"
-        dbName: postgres
+        dbName: tsdb
         sslMode: require
         # By default the url/host is set to the db instance deployed
         # with this chart
         host: "timescaledb.{{ .Release.Namespace }}.svc"
         port: 5432
     jaeger:
+      datasource:
+        enabled: true
       # Endpoint for integrating jaeger datasource in grafana. This should point to HTTP endpoint, not gRPC.
-      promscaleTracesQueryEndPoint: "{{ .Release.Name }}-promscale.{{ .Release.Namespace }}.svc:9201"
+      tricorderTracesQueryEndPoint: "{{ .Release.Name }}-promscale.{{ .Release.Namespace }}.svc:9201"
 
     additionalDataSources:
-      - name: Tricorder-Storage-Connector
-        isDefault: true
-        uid: tricorder_storage_connector
-        access: proxy
-        editable: false
-        type: prometheus
-        url: http://{{ printf "%s-promscale" .Release.Name }}:9201
-        version: 1
       - name: TimescaleDB-Tricorder
         uid: timescaledb_tricorder
         access: proxy
@@ -612,20 +595,6 @@ kube-prometheus-stack:
         type: postgres
         url: timescaledb:5432
         database: tricorder
-        user: postgres
-        jsonData:
-          postgresVersion: 1400
-          timescaledb: true
-        secureJsonData:
-          password: tricorder
-        version: 1
-      - name: TimescaleDB-TSDB
-        uid: timescaledb_tsdb
-        access: proxy
-        editable: false
-        type: postgres
-        url: timescaledb:5432
-        database: tsdb
         user: postgres
         jsonData:
           postgresVersion: 1400
@@ -663,7 +632,18 @@ kube-prometheus-stack:
             maxShards: 20
             minBackoff: 100ms
             maxBackoff: 10s
-
+      # Prometheus pod storage spec
+      storageSpec:
+        # Using PersistentVolumeClaim
+        # disable mount sub path, use the root directory of pvc
+        disableMountSubPath: true
+        volumeClaimTemplate:
+          spec:
+            accessModes:
+              - "ReadWriteOnce"
+            resources:
+              requests:
+                storage: 2Gi
       resources:
         requests:
           cpu: 100m
