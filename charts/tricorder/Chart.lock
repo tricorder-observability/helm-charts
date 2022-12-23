@@ -1,9 +1,0 @@
-dependencies:
-- name: timescaledb-single
-  repository: https://charts.timescale.com
-  version: 0.27.2
-- name: promscale
-  repository: https://charts.timescale.com
-  version: 14.6.0
-digest: sha256:26f6467ad5e9b6bc2a5f206404e680e3b5d923779c8441ec004330b67019d829
-generated: "2022-12-20T17:37:49.459574+08:00"
