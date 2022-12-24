@@ -80,6 +80,23 @@ apiServer:
       hostPort: 50051
       protocol: TCP
 
+  persistentVolumes:
+    data:
+      enabled: true
+      ## database data Persistent Volume Storage Class
+      ## If defined, storageClassName: <storageClass>
+      ## If set to "-", storageClassName: "", which disables dynamic provisioning
+      ## If undefined (the default) or set to null, no storageClassName spec is
+      ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+      ##   GKE, AWS & OpenStack)
+      ##
+      storageClass:
+      size: 200Mi
+      subPath: "tricorder.db"
+      mountPath: "/tricorder/sqlite"
+      annotations: {}
+      accessModes:
+        - ReadWriteOnce
   command:
     extraArgs:
       - --module_db_path=/tricorder/http/tricorder.db

@@ -3,6 +3,14 @@ kind: ConfigMap
 metadata:
   name: tricorder-db-post-init
   namespace: {{ .Release.Namespace }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade,post-delete
+    "helm.sh/hook-weight": "0"
+    "helm.sh/resource-policy": keep
+  labels:
+    app: {{ template "tricorder.fullname" . }}
+    chart: {{ template "tricorder.chart" . }}
+    release: {{ .Release.Name }}
 data:
   db-init.sh: >
     #!/bin/bash
@@ -11,9 +19,7 @@ data:
 
     psql -U postgres -c "CREATE DATABASE tricorder WITH OWNER postgres"
 
-    psql -U postgres -c "\l"
-
-    psql -U postgres -d tricorder -c   "CREATE TABLE IF NOT EXISTS http (
+    psql -U postgres -d tricorder -c  "CREATE TABLE IF NOT EXISTS :"http" (
         time TIMESTAMP WITH TIME ZONE NOT NULL,
         id TEXT NOT NULL,
         method TEXT,
@@ -23,16 +29,6 @@ data:
         body TEXT,
         PRIMARY KEY(time, id)
       );
-    CREATE TABLE IF NOT EXISTS http (
-         time TIMESTAMP WITH TIME ZONE NOT NULL,
-         id TEXT NOT NULL,
-         method TEXT,
-         proto TEXT,
-         url TEXT,
-         header TEXT,
-         body TEXT,
-         PRIMARY KEY(time, id)
-       );
 
     SELECT create_hypertable('http', 'time', chunk_time_interval => INTERVAL '1
     hour');

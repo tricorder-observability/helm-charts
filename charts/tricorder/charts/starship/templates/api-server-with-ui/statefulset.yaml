@@ -1,13 +1,17 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: {{ include "tricorder.fullname" . }}-startship
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "tricorder.labels" . | nindent 4 }}
 spec:
+  serviceName: {{ include "tricorder.fullname" . }}-startship
+  updateStrategy:
+    type: RollingUpdate
   {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
+  #replicas: {{ .Values.replicaCount }}
+  replicas: 1
   {{- end }}
   selector:
     matchLabels:
@@ -38,6 +42,10 @@ spec:
             {{- range .Values.apiServer.command.extraArgs }}
             - {{ . }}
             {{- end }}
+          volumeMounts:
+          - name: tricorder-storage-volume
+            mountPath: {{ .Values.apiServer.persistentVolumes.data.mountPath | quote }}
+            subPath: {{ .Values.apiServer.persistentVolumes.data.subPath | quote }}
           ports:
             {{- range $key, $port := .Values.apiServer.ports }}
             {{- if $port.enabled }}
@@ -100,3 +108,32 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      volumes:
+      {{- if not .Values.apiServer.persistentVolumes.data.enabled }}
+      - name: tricorder-storage-volume
+        emptyDir: {}
+      {{- end }}
+  volumeClaimTemplates:
+  {{- if .Values.apiServer.persistentVolumes.data.enabled }}
+    - metadata:
+        name: tricorder-storage-volume
+        annotations:
+        {{- if .Values.apiServer.persistentVolumes.data.annotations }}
+          {{ toYaml .Values.apiServer.persistentVolumes.data.annotations | nindent 10 }}
+        {{- end }}
+        labels:
+          {{- include "tricorder.selectorLabels" . | nindent 10 }}
+      spec:
+        accessModes:
+          {{ toYaml .Values.apiServer.persistentVolumes.data.accessModes | nindent 8 }}
+        resources:
+          requests:
+            storage: "{{ .Values.apiServer.persistentVolumes.data.size }}"
+      {{- if .Values.apiServer.persistentVolumes.data.storageClass }}
+      {{- if (eq "-" .Values.apiServer.persistentVolumes.data.storageClass) }}
+        storageClassName: ""
+      {{- else }}
+        storageClassName: "{{ .Values.apiServer.persistentVolumes.data.storageClass }}"
+      {{- end }}
+      {{- end }}
+  {{- end }}

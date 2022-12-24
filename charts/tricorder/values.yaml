@@ -28,6 +28,24 @@ starship:
       # Overrides the image tag whose default is the chart appVersion.
       tag: "v0.1-2022-12-22_17-17"
 
+    persistentVolumes:
+      data:
+        enabled: true
+        ## database data Persistent Volume Storage Class
+        ## If defined, storageClassName: <storageClass>
+        ## If set to "-", storageClassName: "", which disables dynamic provisioning
+        ## If undefined (the default) or set to null, no storageClassName spec is
+        ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+        ##   GKE, AWS & OpenStack)
+        ##
+        storageClass:
+        size: 200Mi
+        subPath: "tricorder.db"
+        #TODO(jian): fixe me not works.
+        mountPath: "/tricorder/sqlite/tricorder.db"
+        annotations: {}
+        accessModes:
+          - ReadWriteOnce
     command:
       extraArgs:
         - --module_db_path=/tricorder/http/tricorder.db
@@ -130,34 +148,6 @@ timescaledb-single:
 
   backup:
     enabled: false
-    pgBackRest:
-      # https://pgbackrest.org/configuration.html
-      # Although not impossible, care should be taken not to include secrets
-      # in these parameters. Use Kubernetes Secrets to specify S3 Keys, Secrets etc.
-      compress-type: lz4
-      process-max: 4
-      start-fast: "y"
-      repo1-retention-diff: 2
-      repo1-retention-full: 2
-      repo1-type: s3
-      repo1-cipher-type: "none"
-      repo1-s3-region: us-east-2
-      repo1-s3-endpoint: s3.amazonaws.com
-
-    # Overriding the archive-push/archive-get sections is most useful in
-    # very high througput situations. Look at values/high_throuhgput_example.yaml for more details
-    pgBackRest:archive-push: {}
-    pgBackRest:archive-get: {}
-    jobs:
-        # name: needs to adhere to the kubernetes restrictions
-        # type: can be full, incr or diff, see https://pgbackrest.org/user-guide.html
-        # schedule: https://en.wikipedia.org/wiki/Cron#CRON_expression
-      - name: full-weekly
-        type: full
-        schedule: "12 02 * * 0"
-      - name: incremental-daily
-        type: incr
-        schedule: "12 02 * * 1-6"
     # Extra custom environment variables for the backup container.
     envFrom:
     # - secretRef:
@@ -185,34 +175,12 @@ timescaledb-single:
     #   cpu: 100m
     #   memory: 128Mi
 
-  # When creating a *new* deployment, the default is to initialize (using initdb) the database.
-  # If however, you want to initialize the database using an existing backup, you can do so by
-  # configuring this section.
-  #
-  # WARNING: You *should not* run 2 identically named deployments in separate Kubernetes
-  #          clusters using the same S3 bucket for backups.
-  bootstrapFromBackup:
-    enabled: false
-    # Setting the s3 path is mandatory to avoid overwriting an already existing backup,
-    # and to be sure the restore is explicitly the one requested.
-    repo1-path:
-    # Here you can (optionally) provide a Secret to configure the restore process further.
-    # For example, if you need to specify a different restore bucket, you should set
-    # PGBACKREST_REPO1_S3_BUCKET: <base64 encoded value of the bucket> in these secrets
-    secretName: pgbackrest-bootstrap
-
-
   # Extra custom environment variables.
   # These should be an EnvVar, as this allows you to inject secrets into the environment
   # https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#envvar-v1-core
   env:
-  #  - name: NOT_A_SECRET
-  #    value: "test"
-  #  - name: MYAPPLICATION_STANDBY_PASSWORDS
-  #    valueFrom:
-  #      secretKeyRef:
-  #        name: myapplication-passwords
-  #        key: standby
+    - name: TSTUNE_PROFILE
+      value: promscale
 
   # Externally created Kubernetes secrets will be injected into the pods by referencing them here. You
   # can also add more configuration options and secrets this way (see https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#configure-all-key-value-pairs-in-a-configmap-as-container-environment-variables)
@@ -247,6 +215,9 @@ timescaledb-single:
     # Some examples:
     - configMap:
         name: tricorder-db-post-init
+    - configMap:
+        name: custom-init-scripts
+        optional: true
     - secret:
         name: custom-secret-scripts
 
@@ -301,49 +272,17 @@ timescaledb-single:
     # https://www.postgresql.org/docs/current/creating-cluster.html#CREATING-CLUSTER-MOUNT-POINTS
     data:
       enabled: true
-      size: 2Gi
-      ## database data Persistent Volume Storage Class
-      ## If defined, storageClassName: <storageClass>
-      ## If set to "-", storageClassName: "", which disables dynamic provisioning
-      ## If undefined (the default) or set to null, no storageClassName spec is
-      ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
-      ##   GKE, AWS & OpenStack)
-      ##
-      storageClass: "local"
-      subPath: ""
-      mountPath: "/var/lib/postgresql"
-      annotations: {}
-      accessModes:
-        - ReadWriteOnce
-    # WAL will be a subdirectory of the data volume, which means enabling a separate
-    # volume for the WAL files should just work for new pods.
+      size: 10Gi
     wal:
       enabled: true
       size: 1Gi
-      subPath: ""
-      storageClass: "local"
-      # When changing this mountPath ensure you also change the following key to reflect this:
-      # patroni.postgresql.basebackup.[].waldir
-      mountPath: "/var/lib/postgresql/wal"
-      annotations: {}
-      accessModes:
-        - ReadWriteOnce
-    # Any tablespace mentioned here requires a volume that will be associated with it.
-    # tablespaces:
-      # example1:
-      #   size: 5Gi
-      #   storageClass: gp2
-      # example2:
-      #   size: 5Gi
-      #   storageClass: gp2
 
   resources:
     requests:
       cpu: 100m
       memory: 2Gi
-
   sharedMemory:
-    useMount: false
+    useMount: true
 
   # timescaledb-tune will be run with the Pod resources requests or - if not set - its limits.
   # This should give a reasonably tuned PostgreSQL instance.
@@ -367,7 +306,7 @@ timescaledb-single:
   # enabling pgBouncer will run an extra container in every Pod, serving a pgBouncer
   # pass-through instance
   pgBouncer:
-    enabled: false
+    enabled: true
     port: 6432
     config:
     # DANGER: The below settings are considered to be safe to set, and we recommend
@@ -560,6 +499,7 @@ kube-prometheus-stack:
     persistence:
       type: pvc
       enabled: true
+      size: 1Gi
       accessModes:
         - ReadWriteOnce
     prometheus:
@@ -616,7 +556,7 @@ kube-prometheus-stack:
       evaluationInterval: "1m"
       scrapeInterval: "10s"
       replicas: 2
-      retention: 7d
+      retention: 1d
       replicaExternalLabelName: "__replica__"
       # Promscale requires a cluster label to be present for high availability mode.
       prometheusExternalLabelName: "cluster"
@@ -643,7 +583,7 @@ kube-prometheus-stack:
               - "ReadWriteOnce"
             resources:
               requests:
-                storage: 2Gi
+                storage: 1Gi
       resources:
         requests:
           cpu: 100m

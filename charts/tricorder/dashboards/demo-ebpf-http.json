@@ -111,7 +111,8 @@
     "schemaVersion":37,
     "style":"dark",
     "tags":[
-
+        "ebpf",
+        "http"
     ],
     "templating":{
         "list":[
