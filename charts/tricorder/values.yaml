@@ -7,6 +7,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 starship:
+  tag: "v0.1-2022-12-22_17-17"
   serviceAccount:
     # Specifies whether a service account should be created
     create: true
