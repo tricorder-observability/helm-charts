@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
         - name: {{ .Chart.Name }}-tricorder-agent
-          image: "{{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.agent.image.repository }}:{{ .Values.tag | default .Values.agent.image.tag }}"
           args: ["--module_deployer_address={{ include "tricorder.fullname" . }}-tricorder-api-server:50051"]
           imagePullPolicy: Always
