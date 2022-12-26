@@ -65,7 +65,7 @@ apiServer:
     repository: public.ecr.aws/w3q2q1s5/api-server
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.1-2022-12-22_17-17"
+    tag: "v0.1-3af4ba2c"
 
   ports:
     serverhttp:
@@ -94,13 +94,13 @@ apiServer:
       storageClass:
       size: 200Mi
       subPath: "tricorder.db"
-      mountPath: "/tricorder/sqlite"
+      mountPath: "/tricorder/"
       annotations: {}
       accessModes:
         - ReadWriteOnce
   command:
     extraArgs:
-      - --module_db_path=/tricorder/http/tricorder.db
+      - --module_db_dir_path=/tricorder/
       - --pg_url=postgresql://postgres:tricorder@timescaledb:5432/tricorder
 
   resources: {}
@@ -120,7 +120,7 @@ agent:
     repository: public.ecr.aws/w3q2q1s5/tricorder-agent
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.1-2022-12-22_17-17"
+    tag: "v0.1-3af4ba2c"
 
 ui:
   resources:
@@ -134,7 +134,7 @@ ui:
     repository: public.ecr.aws/w3q2q1s5/mgmt-ui
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.1-2022-12-22_17-17"
+    tag: "v0.1-3af4ba2c"
 
   ports:
     uihttp:
