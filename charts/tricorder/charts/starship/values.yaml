@@ -10,7 +10,7 @@ affinity: {}
 
 podAnnotations: {}
 
-tag: "v0.1-2022-12-22_17-17"
+tag: "v0.1-3af4ba2c"
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
