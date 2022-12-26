@@ -42,6 +42,7 @@ spec:
             {{- range .Values.apiServer.command.extraArgs }}
             - {{ . }}
             {{- end }}
+            - --grafana_url=http://{{ .Release.Name }}-grafana:80
           volumeMounts:
           - name: tricorder-storage-volume
             mountPath: {{ .Values.apiServer.persistentVolumes.data.mountPath | quote }}
