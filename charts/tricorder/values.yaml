@@ -7,7 +7,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 starship:
-  tag: "v0.1-2022-12-22_17-17"
+  tag: "v0.1-3af4ba2c"
   serviceAccount:
     # Specifies whether a service account should be created
     create: true
@@ -27,7 +27,7 @@ starship:
       repository: public.ecr.aws/w3q2q1s5/api-server
       pullPolicy: Always
       # Overrides the image tag whose default is the chart appVersion.
-      tag: "v0.1-2022-12-22_17-17"
+      tag: "v0.1-3af4ba2c"
 
     persistentVolumes:
       data:
@@ -42,14 +42,13 @@ starship:
         storageClass:
         size: 200Mi
         subPath: "tricorder.db"
-        #TODO(jian): fixe me not works.
-        mountPath: "/tricorder/sqlite/tricorder.db"
+        mountPath: "/tricorder/"
         annotations: {}
         accessModes:
           - ReadWriteOnce
     command:
       extraArgs:
-        - --module_db_path=/tricorder/http/tricorder.db
+        - --module_db_dir_path=/tricorder/
         - --pg_url=postgresql://postgres:tricorder@timescaledb:5432/tricorder
 
     ports:
@@ -79,7 +78,7 @@ starship:
       repository: public.ecr.aws/w3q2q1s5/tricorder-agent
       pullPolicy: IfNotPresent
       # Overrides the image tag whose default is the chart appVersion.
-      tag: "v0.1-2022-12-22_17-17"
+      tag: "v0.1-3af4ba2c"
 
   ui:
     resources:
@@ -93,7 +92,7 @@ starship:
       repository: public.ecr.aws/w3q2q1s5/mgmt-ui
       pullPolicy: IfNotPresent
       # Overrides the image tag whose default is the chart appVersion.
-      tag: "v0.1-2022-12-22_17-17"
+      tag: "v0.1-3af4ba2c"
 
     ports:
       uihttp:
