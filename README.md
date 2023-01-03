@@ -9,11 +9,13 @@ Helm must be installed to use the charts. Please refer to Helm's [documentation]
 Once Helm is set up properly, add the repo as follows:
 
 ```bash
-helm repo add tricorder https://tricorder-observability.github.io/helm-charts
+helm repo add tricorder-stable https://tricorder-observability.github.io/helm-charts
 
-kubectl create namespace tricorder
+helm repo update
 
-helm install mytricorder -n tricorder
+kubectl create namespace <your-namespace>
+
+helm install my-tricorder tricorder-stable/tricorder -n <your-namespace>
 ```
 
 ## Upgrade
