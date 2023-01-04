@@ -9,7 +9,7 @@ maintainers:
   - name: JaredTan95
   - name: yaxiong-zhao
 
-version: 0.1.9
+version: 0.1.10
 
 # TODO(yzhao): Let this be propagated as the image tags.
 appVersion: "v0.1.0"
@@ -28,4 +28,4 @@ dependencies:
     repository: "https://prometheus-community.github.io/helm-charts"
     condition: kube-prometheus-stack.enabled
   - name: starship
-    version: 0.1.9
+    version: 0.1.10
