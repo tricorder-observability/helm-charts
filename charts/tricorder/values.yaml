@@ -49,7 +49,7 @@ starship:
     command:
       extraArgs:
         - --module_db_dir_path=/tricorder/
-        - --pg_url=postgresql://postgres:tricorder@timescaledb:5432/tricorder
+        - --pg_url=postgresql://postgres:tricorder@timescaledb:5432/postgres
 
     ports:
       serverhttp:
@@ -442,7 +442,7 @@ promscale:
     sslMode: require
     # database name in which to store the metrics
     # must be created before start
-    dbName: tsdb
+    dbName: postgres
   resources:
     requests:
       cpu: 50m
@@ -516,7 +516,7 @@ kube-prometheus-stack:
         user: postgres
         # leaving password empty will cause helm to generate a random password
         pass: "tricorder"
-        dbName: tsdb
+        dbName: postgres
         sslMode: require
         # By default the url/host is set to the db instance deployed
         # with this chart
