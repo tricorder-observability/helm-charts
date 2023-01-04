@@ -101,7 +101,7 @@ apiServer:
   command:
     extraArgs:
       - --module_db_dir_path=/tricorder/
-      - --pg_url=postgresql://postgres:tricorder@timescaledb:5432/postgres
+      - --pg_url=postgresql://postgres:tricorder@timescaledb:5432/tricorder
 
   resources: {}
     # We usually recommend not to specify default resources and to leave this as a conscious
