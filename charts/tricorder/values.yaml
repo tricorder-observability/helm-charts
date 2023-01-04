@@ -486,7 +486,7 @@ kube-prometheus-stack:
         editable: false
         type: postgres
         url: timescaledb:5432
-        database: postgres
+        database: tricorder
         user: postgres
         jsonData:
           postgresVersion: 1400
