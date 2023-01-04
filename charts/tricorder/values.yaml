@@ -7,7 +7,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 starship:
-  tag: "v0.0.7"
+  tag: "v0.0.8"
   serviceAccount:
     # Specifies whether a service account should be created
     create: true
@@ -463,7 +463,7 @@ kube-prometheus-stack:
       repository: public.ecr.aws/w3q2q1s5/tricorder-frontend
       # Overrides the Grafana image tag whose default is the chart appVersion
       # TODO(yzhao): Change this to inherit the tag of starship
-      tag: v0.0.7
+      tag: v0.0.8
       sha: ''
       pullPolicy: Always
     resources:
