@@ -442,7 +442,7 @@ promscale:
     sslMode: require
     # database name in which to store the metrics
     # must be created before start
-    dbName: postgres
+    dbName: tsdb
   resources:
     requests:
       cpu: 50m
@@ -515,7 +515,7 @@ kube-prometheus-stack:
         user: postgres
         # leaving password empty will cause helm to generate a random password
         pass: "tricorder"
-        dbName: postgres
+        dbName: tsdb
         sslMode: require
         # By default the url/host is set to the db instance deployed
         # with this chart
