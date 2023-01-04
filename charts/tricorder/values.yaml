@@ -213,8 +213,8 @@ timescaledb-single:
     # These scripts are all projected to the same directory and will be executed
     # in sorted order only once: After a cluster initialization
     # Some examples:
-    - configMap:
-        name: tricorder-db-post-init
+    # - configMap:
+    #     name: tricorder-db-post-init
     - configMap:
         name: custom-init-scripts
         optional: true
