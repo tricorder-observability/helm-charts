@@ -148,32 +148,6 @@ timescaledb-single:
 
   backup:
     enabled: false
-    # Extra custom environment variables for the backup container.
-    envFrom:
-    # - secretRef:
-    #     name: extra-pgbackrest-secrets
-
-    # Alternatively, you can expose individual environment variables:
-    # https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#envvar-v1-core
-    # Although not impossible, care should be taken not to include secrets
-    # in these parameters. Use Kubernetes Secrets to specify S3 Keys, Secrets etc.
-    env:
-    # - name: PGBACKREST_REPO1_S3_BUCKET
-    #   value: my_example_s3_bucket_for_backups
-    # - name: PGBACKREST_REPO1_S3_KEY_SECRET
-    #   valueFrom:
-    #     secretKeyRef:
-    #       name: pgbackrest-dev-secrets
-    #       key: repo1-s3-key-secret
-    resources: {}
-    # If you do want to specify resources, uncomment the following
-    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    # limits:
-    #   cpu: 100m
-    #   memory: 128Mi
-    # requests:
-    #   cpu: 100m
-    #   memory: 128Mi
 
   # Extra custom environment variables.
   # These should be an EnvVar, as this allows you to inject secrets into the environment
@@ -207,19 +181,6 @@ timescaledb-single:
             shared_preload_libraries: timescaledb,pg_stat_statements,pg_stat_monitor,pg_stat_kcache
             # TODO: stats_temp_directory was deprectated on PG15, we should remove it when the DB upgrades.
             stats_temp_directory: /tmp/pg_stat_temp
-  postInit:
-    # A list of sources, that contain post init scripts.
-    # https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#projectedvolumesource-v1-core
-    # These scripts are all projected to the same directory and will be executed
-    # in sorted order only once: After a cluster initialization
-    # Some examples:
-    # - configMap:
-    #     name: tricorder-db-post-init
-    - configMap:
-        name: custom-init-scripts
-        optional: true
-    - secret:
-        name: custom-secret-scripts
 
   # Values for defining the primary & replica Kubernetes Services.
   service:
@@ -257,25 +218,15 @@ timescaledb-single:
       # loadBalancerSourceRanges:
       # - "0.0.0.0/0"
 
-  readinessProbe:
-    enabled: true
-    initialDelaySeconds: 5
-    periodSeconds: 30
-    timeoutSeconds: 5
-    failureThreshold: 6
-    successThreshold: 1
-
   persistentVolumes:
     # For sanity reasons, the actual PGDATA and wal directory will be subdirectories of the Volume mounts,
     # this allows Patroni/a human/an automated operator to move directories during bootstrap, which cannot
     # be done if we did not use subdirectories
     # https://www.postgresql.org/docs/current/creating-cluster.html#CREATING-CLUSTER-MOUNT-POINTS
     data:
-      enabled: true
-      size: 10Gi
+      size: 20Gi
     wal:
-      enabled: true
-      size: 1Gi
+      size: 5Gi
 
   resources:
     requests:
@@ -387,19 +338,9 @@ timescaledb-single:
 
   podMonitor:
     # Specifies whether PodMonitor for Prometheus operator should be created
-    enabled: false
+    enabled: true
     path: /metrics
     interval: 10s
-    # scrapeTimeout: 30s
-    # Specifies namespace, where PodMonitor should be installed
-    # namespace: monitoring
-    # labels:
-    #   release: prometheus
-    # honorLabels: true
-    # metricRelabelings: []
-    # targetLabels:
-    #   - foo
-
   # For new deployments, we would advise Parallel here, however as that change breaks previous
   # deployments, it is set to OrderedReady here
   podManagementPolicy: OrderedReady
@@ -428,6 +369,15 @@ promscale:
   replicaCount: 3
   extraArgs:
     - "--metrics.high-availability=true"
+  extraEnv:
+    - name: "TOBS_TELEMETRY_INSTALLED_BY"
+      value: "helm"
+    - name: "TOBS_TELEMETRY_VERSION"
+      value: "14.6.0"
+    - name: "TOBS_TELEMETRY_TRACING_ENABLED"
+      value: "true"
+    - name: "TOBS_TELEMETRY_TIMESCALEDB_ENABLED"
+      value: "true"
   #connectionSecretName: "tricorder-promscale-connection"
   connection:
     # Database connection settings. If `uri` is not
@@ -437,7 +387,8 @@ promscale:
     # user used to connect to TimescaleDB
     user: "postgres"
     password: "tricorder"
-    host: "timescaledb.{{ .Release.Namespace }}.svc.cluster.local"
+    # in the same namespace
+    host: "timescaledb"
     port: 5432
     sslMode: require
     # database name in which to store the metrics
