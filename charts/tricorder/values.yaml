@@ -49,7 +49,7 @@ starship:
     command:
       extraArgs:
         - --module_db_dir_path=/tricorder/
-        - --pg_url=postgresql://postgres:tricorder@timescaledb:5432/postgres
+        - --pg_url=postgresql://postgres:tricorder@timescaledb:5432/tricorder
 
     ports:
       serverhttp:
