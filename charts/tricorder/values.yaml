@@ -121,6 +121,12 @@ timescaledb-single:
   fullnameOverride: timescaledb
   #clusterName: "{{ .Release.Name }}-tsdb"
 
+  image:
+    # Image was built from
+    # https://github.com/timescale/timescaledb-docker-ha
+    repository: timescale/timescaledb-ha
+    # TODO(jian): bump helm chart, https://github.com/timescale/helm-charts/issues/405#issuecomment-1340996682
+    tag: pg14.6-ts2.8.1-patroni-static-primary-p3
   # By default those secrets are randomly generated.
   # To prevent misconfiguration, modifications from helm upgrade won't be applied to those secrets.
   # As a result changing secrets cannot be done via helm and need manual intervention.
@@ -169,19 +175,29 @@ timescaledb-single:
   #   - archive_command will be set to /bin/true if backup is disabled
   #   - any context sensitive parameter (scope, namespace, name) will be overridden by the Kubernetes context
   # https://patroni.readthedocs.io/en/latest/SETTINGS.html#settings
+  # refs: https://docs.timescale.com/promscale/latest/recommendations/config-recomm/#database-configuration
   patroni:
     bootstrap:
       dcs:
         postgresql:
           parameters:
+            max_connections: 500
             checkpoint_timeout: 15min
             bgwriter_delay: 10ms
             bgwriter_lru_maxpages: 100000
-            # synchronous_commit: "off"
+            synchronous_commit: "off"
             shared_preload_libraries: timescaledb,pg_stat_statements,pg_stat_monitor,pg_stat_kcache
             # TODO: stats_temp_directory was deprectated on PG15, we should remove it when the DB upgrades.
             stats_temp_directory: /tmp/pg_stat_temp
 
+  postInit:
+    # A list of sources, that contain post init scripts.
+    # https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#projectedvolumesource-v1-core
+    # These scripts are all projected to the same directory and will be executed
+    # in sorted order only once: After a cluster initialization
+    # Some examples:
+    - configMap:
+        name: timescale-post-init
   # Values for defining the primary & replica Kubernetes Services.
   service:
     primary:
@@ -543,3 +559,70 @@ kube-prometheus-stack:
         limits:
           cpu: "1"
           memory: 2048Mi
+
+opentelemetry-demo:
+  enabled: true
+  observability:
+    otelcol:
+      enabled: true
+    jaeger:
+      enabled: false
+    prometheus:
+      enabled: false
+    grafana:
+      enabled: false
+  # configs for otel col.
+  opentelemetry-collector:
+    nameOverride: otelcol
+    mode: deployment
+    resources:
+      limits:
+        memory: 125Mi
+    service:
+      type: ClusterIP
+    ports:
+      metrics:
+        enabled: true
+      prometheus:
+        enabled: true
+        containerPort: 9464
+        servicePort: 9464
+        protocol: TCP
+    podAnnotations:
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "9464"
+      opentelemetry_community_demo: "true"
+    config:
+      receivers:
+        otlp:
+          protocols:
+            http:
+              # Since this collector needs to receive data from the web, enable cors for all origins
+              # `allowed_origins` can be refined for your deployment domain
+              cors:
+                allowed_origins:
+                  - "http://*"
+                  - "https://*"
+
+      exporters:
+        ## Create an exporter to promscale connector using the standard `otlp` export format
+        otlp:
+          endpoint: '{{ .Release.Name }}-promscale.{{ .Release.Namespace }}.svc:9202'
+          tls:
+            insecure: true
+        # Create an exporter to Prometheus (metrics)
+        prometheus:
+          endpoint: '0.0.0.0:9464'
+
+      processors:
+        # Make use of the spanmetrics processor to compute RED metrics from all tracing spans
+        spanmetrics:
+          metrics_exporter: prometheus
+
+      service:
+        pipelines:
+          traces:
+            processors: [memory_limiter, spanmetrics, batch]
+            exporters: [otlp, logging]
+          metrics:
+            exporters: [prometheus, logging]
