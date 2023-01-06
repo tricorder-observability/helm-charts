@@ -28,4 +28,6 @@ runs:
       shell: bash
       run: |
           helm repo add timescale 'https://charts.timescale.com'
+          helm repo add open-telemetry https://open-telemetry.github.io/opentelemetry-helm-charts
+          helm repo add kube-prometheus-stack https://prometheus-community.github.io/helm-charts
           helm dep up .

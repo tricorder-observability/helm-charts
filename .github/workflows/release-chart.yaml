@@ -24,11 +24,12 @@ jobs:
         uses: azure/setup-helm@v3.1
         with:
           version: v3.4.1
-
-      - name: Add dependent repositories
+      - name: Setup
+        uses: ./.github/actions/setup
+        with:
+          create-kind-cluster: "false"
+      - name: Update repositories
         run: |
-          helm repo add timescale https://charts.timescale.com
-          helm repo add kube-prometheus-stack https://prometheus-community.github.io/helm-charts
           helm dep up charts/**
 
       - name: release tricorder
