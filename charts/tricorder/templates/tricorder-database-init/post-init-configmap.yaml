@@ -18,18 +18,3 @@ data:
     psql -d "$1" <<__SQL__
     CREATE DATABASE tricorder WITH OWNER postgres;
     __SQL__
-
-    # psql -U postgres -d tricorder <<__SQL__
-    #   "CREATE TABLE IF NOT EXISTS http (
-    #      time TIMESTAMP WITH TIME ZONE NOT NULL,
-    #      id TEXT NOT NULL,
-    #      method TEXT,
-    #      proto TEXT,
-    #      url TEXT,
-    #      header TEXT,
-    #      body TEXT,
-    #      PRIMARY KEY(time, id)
-    #    );
-    #    SELECT create_hypertable('http', 'time', chunk_time_interval => INTERVAL '1 hour');
-    #    SELECT add_retention_policy('http', INTERVAL '1 days');"
-    # __SQL__
