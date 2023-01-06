@@ -4,14 +4,11 @@ This repository contains Helm charts to help with the deployment of tricorder on
 
 ## Prerequisites
 - Kubernetes 1.16+
-- Helm 3+
+- Helm 3+, Helm must be installed to use the charts. Please refer to Helm's [documentation](https://helm.sh/docs/) to get started.
 - Helm chats will creates DB pods using a Kubernetes [StatefulSet](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/). For AWS EKS, The official [EBS CSI](https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html) documentation may be helpful to you.
 
 ## Install
 
-Helm must be installed to use the charts. Please refer to Helm's [documentation](https://helm.sh/docs/) to get started.
-
-### Installing the helm chart
 Once Helm is set up properly, add the repo as follows:
 
 ```bash
