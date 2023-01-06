@@ -28,9 +28,6 @@ jobs:
         uses: ./.github/actions/setup
         with:
           create-kind-cluster: "false"
-      - name: Update repositories
-        run: |
-          helm dep up charts/**
 
       - name: release tricorder
         uses: helm/chart-releaser-action@v1.4.1
