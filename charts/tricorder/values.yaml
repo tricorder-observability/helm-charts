@@ -626,3 +626,8 @@ opentelemetry-demo:
             exporters: [otlp, logging]
           metrics:
             exporters: [prometheus, logging]
+  components:
+    frontendProxy:
+      resources:
+        limits:
+          memory: 300Mi
