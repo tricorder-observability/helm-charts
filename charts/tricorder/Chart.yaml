@@ -9,7 +9,7 @@ maintainers:
   - name: JaredTan95
   - name: yaxiong-zhao
 
-version: 0.1.18
+version: 0.1.19
 
 # TODO(yzhao): Let this be propagated as the image tags.
 appVersion: "v0.1.0"
@@ -29,7 +29,7 @@ dependencies:
     condition: kube-prometheus-stack.enabled
   - name: opentelemetry-demo
     repository: "https://open-telemetry.github.io/opentelemetry-helm-charts"
-    version: 0.15.3
+    version: 0.12.2
     condition: opentelemetry-demo.enabled
   - name: starship
-    version: 0.1.18
+    version: 0.1.19
