@@ -10,7 +10,7 @@ affinity: {}
 
 podAnnotations: {}
 
-tag: "v0.1-3af4ba2c"
+tag: "80ec60290aca37021fbfd853d1067005cddfd4bf_main"
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
@@ -65,7 +65,7 @@ apiServer:
     repository: public.ecr.aws/w3q2q1s5/api-server
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.1-3af4ba2c"
+    tag: "80ec60290aca37021fbfd853d1067005cddfd4bf_main"
 
   ports:
     serverhttp:
@@ -120,7 +120,7 @@ agent:
     repository: public.ecr.aws/w3q2q1s5/tricorder-agent
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.1-3af4ba2c"
+    tag: "80ec60290aca37021fbfd853d1067005cddfd4bf_main"
 
 ui:
   resources:
@@ -134,7 +134,7 @@ ui:
     repository: public.ecr.aws/w3q2q1s5/mgmt-ui
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: "v0.1-3af4ba2c"
+    tag: "80ec60290aca37021fbfd853d1067005cddfd4bf_main"
 
   ports:
     uihttp:
