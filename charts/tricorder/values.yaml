@@ -273,7 +273,10 @@ timescaledb-single:
   # enabling pgBouncer will run an extra container in every Pod, serving a pgBouncer
   # pass-through instance
   pgBouncer:
-    enabled: true
+    # Solve the problem of too many connections.
+    # Needs more work, disable for now, as it's not working
+    # as expected.
+    enabled: false
     port: 6432
     config:
     # DANGER: The below settings are considered to be safe to set, and we recommend
@@ -430,7 +433,7 @@ kube-prometheus-stack:
       repository: public.ecr.aws/w3q2q1s5/tricorder-frontend
       # Overrides the Grafana image tag whose default is the chart appVersion
       # TODO(yzhao): Change this to inherit the tag of starship
-      tag: v0.0.8
+      tag: v0.0.9
       sha: ''
       pullPolicy: Always
     resources:
@@ -561,7 +564,7 @@ kube-prometheus-stack:
           memory: 2048Mi
 
 opentelemetry-demo:
-  enabled: true
+  enabled: false
   observability:
     otelcol:
       enabled: true

@@ -1,4 +1,4 @@
-# tricorder observability Helm charts
+# Starship Helm charts
 
 This repository contains Helm charts to help with the deployment of tricorder on Kubernetes. This project is currently in active development.
 
@@ -17,9 +17,9 @@ helm repo add tricorder-stable https://tricorder-observability.github.io/helm-ch
 helm repo update
 ```
 
-### Install with OpenTelemetry Demo
+### Install without OpenTelemetry Demo App
 
-When you execute the command, the [Opentelemetry Demo](https://github.com/open-telemetry/opentelemetry-demo) will be installed for you by default for demonstration data.
+When you execute the command, the [Opentelemetry Demo](https://github.com/open-telemetry/opentelemetry-demo) will not be installed.
 
 ```bash
 kubectl create namespace <your-namespace>
@@ -27,13 +27,13 @@ kubectl create namespace <your-namespace>
 helm install my-tricorder tricorder-stable/tricorder -n <your-namespace>
 ```
 
-### Install and disable OpenTelemetry Demo
-If you don't want to install OpenTelemetry demo data, you can disable it with the following command:
+### Install with OpenTelemetry Demo App
+If you want to install OpenTelemetry demo data, you can enalbe it with the following command:
 
 ```bash
 kubectl create namespace <your-namespace>
 
-helm install my-tricorder tricorder-stable/tricorder -n <your-namespace> --set opentelemetry-demo.enabled=false
+helm install my-tricorder tricorder-stable/tricorder -n <your-namespace> --set opentelemetry-demo.enabled=true
 ```
 
 ### Override settigns
