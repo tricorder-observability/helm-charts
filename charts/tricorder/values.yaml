@@ -191,8 +191,11 @@ timescaledb-single:
             stats_temp_directory: /tmp/pg_stat_temp
 
   postInit:
+    # Post innitialization script for timescaledb, see its definition in
+    # templates/tricorder-database-init/post-init-configmap.yaml
+    # Post initialization setup details:
+    # https://github.com/timescale/helm-charts/blob/main/charts/timescaledb-single/docs/admin-guide.md#post-init-scripts
     # A list of sources, that contain post init scripts.
-    # https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.18/#projectedvolumesource-v1-core
     # These scripts are all projected to the same directory and will be executed
     # in sorted order only once: After a cluster initialization
     # Some examples:
