@@ -9,7 +9,7 @@ maintainers:
   - name: JaredTan95
   - name: yaxiong-zhao
 
-version: 0.1.24
+version: 0.1.25
 
 # TODO(yzhao): Let this be propagated as the image tags.
 appVersion: "v0.1.0"
@@ -32,4 +32,4 @@ dependencies:
     version: 0.12.2
     condition: opentelemetry-demo.enabled
   - name: starship
-    version: 0.1.24
+    version: 0.1.25
