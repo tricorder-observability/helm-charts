@@ -243,9 +243,9 @@ timescaledb-single:
     # be done if we did not use subdirectories
     # https://www.postgresql.org/docs/current/creating-cluster.html#CREATING-CLUSTER-MOUNT-POINTS
     data:
-      size: 20Gi
+      size: 150Gi
     wal:
-      size: 5Gi
+      size: 20Gi
 
   resources:
     requests:
