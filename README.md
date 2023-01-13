@@ -9,7 +9,9 @@ This repository contains Helm charts to help with the deployment of tricorder on
 ### EKS
 - For AWS EKS, isntall [EBS CSI](https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html) on your EKS cluster.
   This is required because Helm chats will creates DB pods using a Kubernetes
-  [StatefulSet](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/). 
+  [StatefulSet](https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/), and in the process,
+  we need to create [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
+  to store the database's data file. PersistentVolume requires EBS CSI.
 
 ## Install
 
