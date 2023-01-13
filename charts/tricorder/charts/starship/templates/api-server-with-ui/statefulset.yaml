@@ -79,6 +79,8 @@ spec:
             value: "localhost"
           - name: API_SERVER_PORT
             value: "8080"
+          - name: HELM_RELEASE_NAME
+            value: {{ .Release.Name }}-grafana
           ports:
             {{- range $key, $port := .Values.ui.ports }}
             {{- if $port.enabled }}
