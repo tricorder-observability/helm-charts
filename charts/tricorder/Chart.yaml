@@ -1,6 +1,6 @@
 apiVersion: v2
 name: tricorder
-description: Helm Charts for tricorder observability.
+description: "Helm Charts for Starship, Tricorder Observability's next-generatoin Observability Platform built on eBPF+WASM"
 
 sources:
   - https://github.com/tricorder-observability/helm-charts
