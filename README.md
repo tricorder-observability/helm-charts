@@ -15,58 +15,40 @@ This repository contains Helm charts to help with the deployment of tricorder on
 
 ## Install
 
-Once Helm is set up properly, add the repo as follows:
-
 ```bash
 helm repo add tricorder-stable https://tricorder-observability.github.io/helm-charts
-
 helm repo update
+
+# Change namespace to your own, here we use tricorder as an example
+kubectl create namespace tricorder
+helm install my-tricorder tricorder-stable/tricorder -n tricorder
 ```
 
-### Install without OpenTelemetry Demo App
-
-When you execute the command, the [Opentelemetry Demo](https://github.com/open-telemetry/opentelemetry-demo) will not be installed.
+The Helm charts in this repo come with an [Opentelemetry Demo](https://github.com/open-telemetry/opentelemetry-demo).
+By default, it's not installed. Set `opentelemetry-demo.enabled=true` to install it
 
 ```bash
-kubectl create namespace <your-namespace>
-
-helm install my-tricorder tricorder-stable/tricorder -n <your-namespace>
+helm install my-tricorder tricorder-stable/tricorder -n tricorder --set opentelemetry-demo.enabled=true
 ```
 
-### Install with OpenTelemetry Demo App
-If you want to install OpenTelemetry demo data, you can enalbe it with the following command:
+To enable external access to Starship's Web UI, override `starship.service.type`
+to [`LoadBalancer`](https://kubernetes.io/docs/concepts/services-networking/service/):
 
 ```bash
-kubectl create namespace <your-namespace>
-
-helm install my-tricorder tricorder-stable/tricorder -n <your-namespace> --set opentelemetry-demo.enabled=true
+helm install my-tricorder tricorder-stable/tricorder -n tricorder --set starship.service.type=LoadBalancer --set kube-prometheus-stack.grafana.service.type=LoadBalancer
 ```
 
-### Override settigns
-
-Override `starship.service.type` to [`LoadBalancer`](https://kubernetes.io/docs/concepts/services-networking/service/) to access tricorder by external IPs:
-
-```bash
-kubectl create namespace <your-namespace>
-
-helm install my-tricorder tricorder-stable/tricorder -n <your-namespace> --set starship.service.type=LoadBalancer --set kube-prometheus-stack.grafana.service.type=LoadBalancer
+If you already installed Starship, you can modify the service type with `helm upgrade`:
+```
+helm upgrade my-tricorder tricorder-stable/tricorder -n tricorder --set starship.service.type=LoadBalancer --set kube-prometheus-stack.grafana.service.type=LoadBalancer
 ```
 
-You can also update the service type by `helm upgrade`:
-```
-# Change service type from LoadBalancer to ClusterIP
-helm upgrade my-tricorder tricorder-stable/tricorder -n tricorder --set starship.service.type=ClusterIP --set kube-prometheus-stack.grafana.service.type=ClusterIP
-```
-
-On AWS EKS, you need to install the official [AWS Load Balancer Controller](https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html) in order to use LoadBalancer service.
+On AWS EKS, you need to install [AWS Load Balancer Controller](https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html)
+in order to use LoadBalancer service.
 
 TODO: Add instructions for other public Clouds.
-
 
 ## Uninstall
 Due to some quirkiness with Helm, if you wish to uninstall tobs you will need to follow these steps.
 
 [Uninstall and Cleanup](./docs/uninstall.md)
-
-## Sub-charts
-- [tricorder-starship](./charts/tricorder/charts/starship/README.md)
