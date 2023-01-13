@@ -48,7 +48,8 @@ helm install my-tricorder tricorder-stable/tricorder -n <your-namespace> --set s
 
 You can also update the service type by `helm upgrade`:
 ```
-helm install my-tricorder tricorder-stable/tricorder -n tricorder --set starship.service.type=LoadBalancer --set kube-prometheus-stack.grafana.service.type=LoadBalancer
+# Change service type from LoadBalancer to ClusterIP
+helm upgrade my-tricorder tricorder-stable/tricorder -n tricorder --set starship.service.type=ClusterIP --set kube-prometheus-stack.grafana.service.type=ClusterIP
 ```
 
 On AWS EKS, you need to install the official [AWS Load Balancer Controller](https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html) in order to use LoadBalancer service.
