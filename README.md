@@ -3,8 +3,8 @@
 This repository contains Helm charts to help with the deployment of tricorder on Kubernetes. This project is currently in active development.
 
 ## Prerequisites
-- Kubernetes 1.16+
-- Helm 3+, Helm must be installed to use the charts. Please refer to Helm's [documentation](https://helm.sh/docs/) to get started.
+- Kubernetes 1.16+ [get started](https://kubernetes.io/docs/setup/)
+- Helm 3+ [installation](https://helm.sh/docs/intro/install/)
 
 ### EKS
 - For AWS EKS, isntall [EBS CSI](https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html) on your EKS cluster.
