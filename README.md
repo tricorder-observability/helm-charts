@@ -1,6 +1,8 @@
 # Starship Helm charts
 
-This repository contains Helm charts to help with the deployment of tricorder on Kubernetes. This project is currently in active development.
+This repository contains Helm charts for deploying Starship Observability platform,
+developed by [Tricorder Observability](https://tricorder.dev).
+This project is currently in active development.
 
 ## Prerequisites
 - Kubernetes 1.16+ [get started](https://kubernetes.io/docs/setup/)
@@ -15,11 +17,11 @@ This repository contains Helm charts to help with the deployment of tricorder on
 
 ## Install
 
+Change namespace to your own, here we use tricorder as an example.
+
 ```bash
 helm repo add tricorder-stable https://tricorder-observability.github.io/helm-charts
 helm repo update
-
-# Change namespace to your own, here we use tricorder as an example
 kubectl create namespace tricorder
 helm install my-tricorder tricorder-stable/tricorder -n tricorder
 ```
@@ -28,19 +30,24 @@ The Helm charts in this repo come with an [Opentelemetry Demo](https://github.co
 By default, it's not installed. Set `opentelemetry-demo.enabled=true` to install it
 
 ```bash
-helm install my-tricorder tricorder-stable/tricorder -n tricorder --set opentelemetry-demo.enabled=true
+helm install my-tricorder tricorder-stable/tricorder -n tricorder \
+    --set opentelemetry-demo.enabled=true
 ```
 
 To enable external access to Starship's Web UI, override `starship.service.type`
 to [`LoadBalancer`](https://kubernetes.io/docs/concepts/services-networking/service/):
 
 ```bash
-helm install my-tricorder tricorder-stable/tricorder -n tricorder --set starship.service.type=LoadBalancer --set kube-prometheus-stack.grafana.service.type=LoadBalancer
+helm install my-tricorder tricorder-stable/tricorder -n tricorder \
+    --set starship.service.type=LoadBalancer \
+    --set kube-prometheus-stack.grafana.service.type=LoadBalancer
 ```
 
 If you already installed Starship, you can modify the service type with `helm upgrade`:
 ```
-helm upgrade my-tricorder tricorder-stable/tricorder -n tricorder --set starship.service.type=LoadBalancer --set kube-prometheus-stack.grafana.service.type=LoadBalancer
+helm upgrade my-tricorder tricorder-stable/tricorder -n tricorder \
+    --set starship.service.type=LoadBalancer \
+    --set kube-prometheus-stack.grafana.service.type=LoadBalancer
 ```
 
 On AWS EKS, you need to install [AWS Load Balancer Controller](https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html)
