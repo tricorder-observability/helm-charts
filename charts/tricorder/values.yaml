@@ -6,7 +6,9 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-tag: "80ec60290aca37021fbfd853d1067005cddfd4bf_main"
+images:
+  tag: "80ec60290aca37021fbfd853d1067005cddfd4bf_main"
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true

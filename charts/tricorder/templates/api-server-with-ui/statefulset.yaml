@@ -36,7 +36,7 @@ spec:
         - name: {{ include "tricorder.fullname" . }}-api-server
           securityContext:
             {{- toYaml .Values.apiServer.securityContext | nindent 12 }}
-          image: "{{ .Values.apiServer.image.repository }}:{{ .Values.tag | default .Values.apiServer.image.tag }}"
+          image: "{{ .Values.apiServer.image.repository }}:{{ .Values.images.tag | default .Values.apiServer.image.tag }}"
           imagePullPolicy: {{ .Values.apiServer.image.pullPolicy }}
           args:
             {{- range .Values.apiServer.command.extraArgs }}

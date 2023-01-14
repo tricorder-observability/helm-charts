@@ -1,6 +1,8 @@
 apiVersion: v1
 kind: Service
 metadata:
+  # TODO(jinyun/yzhao): Might remove helm variable and hardcode to
+  # tricorder-api-server
   name: {{ include "tricorder.fullname" . }}-tricorder-api-server
   namespace: {{ .Release.Namespace }}
   labels:
