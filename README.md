@@ -73,6 +73,8 @@ charts local path `charts/tricorder`.
 ```shell
 git clone git@github.com:tricorder-observability/helm-charts.git
 cd helm-charts
+# You'll need this step to fetch the dependent charts
+helm dep update charts/tricorder
 helm install my-tricorder charts/tricorder -n tricorder
 ```
 
