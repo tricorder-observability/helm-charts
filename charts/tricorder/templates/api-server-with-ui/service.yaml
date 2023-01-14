@@ -8,7 +8,7 @@ metadata:
   labels:
     {{- include "tricorder.labels" . | nindent 4 }}
 spec:
-  type: {{ .Values.service.type }}
+  type: {{ .Values.apiServer.service.type }}
   ports: {{ include "tricorder.svc.ports" . | nindent 4 }}
   selector:
     {{- include "tricorder.selectorLabels" . | nindent 4 }}

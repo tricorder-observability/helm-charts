@@ -64,6 +64,9 @@ service:
   port: 80
 
 apiServer:
+  service:
+    type: LoadBalancer
+
   image:
     repository: public.ecr.aws/w3q2q1s5/api-server
     pullPolicy: Always
