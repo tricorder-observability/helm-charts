@@ -65,6 +65,21 @@ helm upgrade my-tricorder tricorder-stable/tricorder -n tricorder \
     --set tag=<a specific tag>
 ```
 
+## Install from local repo
+
+`git clone` this repo repo, and replace `tricorder-stable/tricorder` with the
+charts local path `charts/tricorder`.
+
+```shell
+git clone git@github.com:tricorder-observability/helm-charts.git
+cd helm-charts
+helm install my-tricorder charts/tricorder -n tricorder
+```
+
+All commands listed in the previous [install](#Install) section works when you
+swap `tricorder-stable/tricorder` with `charts/tricorder` when the PWD is the
+root of the repo.
+
 ## Uninstall
 
 To uninstall a release you can run:
