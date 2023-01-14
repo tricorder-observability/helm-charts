@@ -31,5 +31,3 @@ dependencies:
     repository: "https://open-telemetry.github.io/opentelemetry-helm-charts"
     version: 0.12.2
     condition: opentelemetry-demo.enabled
-  - name: starship
-    version: 0.1.25
