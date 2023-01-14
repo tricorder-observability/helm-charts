@@ -55,6 +55,8 @@ helm install my-tricorder tricorder-stable/tricorder -n tricorder \
 As usual, you can override configuration values defined in `Values.yaml`
 with `--set` flags.
 
+### Override default values
+
 ```shell
 # Change service type to ClusterIP
 helm upgrade my-tricorder tricorder-stable/tricorder -n tricorder \
