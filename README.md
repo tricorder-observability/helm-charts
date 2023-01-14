@@ -12,6 +12,8 @@ as technical preview only.
 - Kubernetes 1.16+ [get started](https://kubernetes.io/docs/setup/)
 - Helm 3+ [installation](https://helm.sh/docs/intro/install/)
 
+TODO: Add instructions for other public Clouds.
+
 ### AWS EKS
 - If you are using AWS EKS, isntall
   [EBS CSI](https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html)
@@ -26,6 +28,13 @@ as technical preview only.
   type.
 
 ## Install
+
+{% note %}
+**Note:** Do not try to install Starship simultaneously into multiple
+namespaces. That won't work because of system limitations.
+If you accidentally did that, follow the [uninstall](#Uninstall) instructions
+to remove all artifacts and reinstall.
+{% endnote %}
 
 Change namespace to your own, here we use `tricorder` as an example.
 
@@ -49,6 +58,7 @@ helm install my-tricorder tricorder-stable/tricorder -n tricorder \
 
 As usual, you can override configuration values defined in `Values.yaml`
 with `--set` flags.
+
 ```shell
 # Change service type to ClusterIP
 helm upgrade my-tricorder tricorder-stable/tricorder -n tricorder \
@@ -59,11 +69,7 @@ helm upgrade my-tricorder tricorder-stable/tricorder -n tricorder \
     --set tag=<a specific tag>
 ```
 
-TODO: Add instructions for other public Clouds.
-
 ## Uninstall
-
-Due to some quirkiness with Helm, if you wish to uninstall tobs you will need to follow these steps.
 
 To uninstall a release you can run:
 
@@ -71,63 +77,73 @@ To uninstall a release you can run:
 helm uninstall my-tricorder -n tricorder
 ```
 
-After uninstalling helm release some objects will be left over. To remove them follow next sections.
+After uninstalling helm release some objects will be left over. To remove them
+follow next sections.
 
 ### Cleanup secrets
-secret's created with the deployment aren't deleted. These secrets need to be manually deleted:
+
+Secret's created with the deployment aren't deleted. These secrets need to be
+manually deleted:
+
 ```shell
-NAMESPACE=<namespace>
-kubectl delete -n $NAMESPACE $(kubectl get secrets -n $NAMESPACE -l "app=timescaledb" -o name)
+kubectl delete -n tricorder \
+    $(kubectl get secrets -n tricorder -l "app=timescaledb" -o name)
 ```
 
 ### Cleanup configmap
 ```shell
-RELEASE=<release_name>
-NAMESPACE=<namespace>
-kubectl delete -n $NAMESPACE $(kubectl get configmap -n $NAMESPACE -l "app=$RELEASE-promscale" -o name)
+kubectl delete -n tricorder \
+    $(kubectl get configmap -n tricorder -l "app=my-tricorder-promscale" -o name)
 ```
 
 ### Cleanup Kube-Prometheus secret
-One of the Kube-Prometheus secrets created with the deployment isn't deleted. This secret needs to be manually deleted:
+
+One of the Kube-Prometheus secrets created with the deployment isn't deleted.
+This secret needs to be manually deleted:
+
 ```shell
-RELEASE=<release_name>
-NAMESPACE=<namespace>
-kubectl delete secret -n $NAMESPACE $RELEASE-kube-prometheus-stack-admission
+kubectl delete secret -n tricorder my-tricorder-kube-prometheus-stack-admission
 ```
 
 ### Cleanup DB PVCs and Backup
-Removing the deployment does not remove the Persistent Volume Claims (pvc) belonging to the release. For a full cleanup run:
+Removing the deployment does not remove the Persistent Volume Claims (pvc)
+belonging to the release. For a full cleanup run:
 
 ```shell
-RELEASE=<release_name>
-NAMESPACE=<namespace>
-kubectl delete -n $NAMESPACE $(kubectl get pvc -n $NAMESPACE -l release=$RELEASE -o name)
+kubectl delete -n tricorder \
+    $(kubectl get pvc -n tricorder -l release=my-tricorder -o name)
 ```
 
 ### Prometheus PVCs
-Removing the deployment does not remove the Persistent Volume Claims (pvc) of Prometheus belonging to the release. For a full cleanup run:
+
+Removing the deployment does not remove the Persistent Volume Claims (pvc) of
+Prometheus belonging to the release. For a full cleanup run:
+
 ```shell
-RELEASE=<release_name>
-NAMESPACE=<namespace>
-kubectl delete -n $NAMESPACE $(kubectl get pvc -n $NAMESPACE -l operator.prometheus.io/name=$RELEASE-kube-prometheus-stack-prometheus -o name)
+kubectl delete -n tricorder $(kubectl get pvc -n tricorder \
+    -l operator.prometheus.io/name=my-tricorder-kube-prometheus-stack-prometheus -o name)
 ```
 
 ### Prometheus CRDs, ValidatingWebhookConfiguration and MutatingWebhookConfiguration
 
 ```shell
-kubectl delete crd alertmanagerconfigs.monitoring.coreos.com alertmanagers.monitoring.coreos.com probes.monitoring.coreos.com prometheuses.monitoring.coreos.com prometheusrules.monitoring.coreos.com servicemonitors.monitoring.coreos.com thanosrulers.monitoring.coreos.com podmonitors.monitoring.coreos.com
+kubectl delete crd alertmanagerconfigs.monitoring.coreos.com \
+    alertmanagers.monitoring.coreos.com \
+    probes.monitoring.coreos.com \
+    prometheuses.monitoring.coreos.com \
+    prometheusrules.monitoring.coreos.com \
+    servicemonitors.monitoring.coreos.com \
+    thanosrulers.monitoring.coreos.com \
+    podmonitors.monitoring.coreos.com
 ```
 
 ```shell
-RELEASE=<release_name>
-kubectl delete MutatingWebhookConfiguration $RELEASE-kube-promethe-admission
-
-kubectl delete ValidatingWebhookConfiguration $RELEASE-kube-prometheus-admission
+kubectl delete MutatingWebhookConfiguration my-tricorder-kube-promethe-admission
+kubectl delete ValidatingWebhookConfiguration my-tricorder-kube-prometheus-admission
 ```
 
 ### Delete Namespace
-Since it was recommended for you to install tobs into its own specific namespace you can go ahead and remove that as well.
+
 ```shell
-NAMESPACE=<namespace>
-kubectl delete ns $NAMESPACE
+kubectl delete namespace tricorder
 ```
