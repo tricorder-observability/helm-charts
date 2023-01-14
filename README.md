@@ -3,12 +3,8 @@
 This repository contains Helm charts for deploying Starship Observability
 platform, developed by [Tricorder Observability](https://tricorder.dev).
 
-{% note %}
-
-**Note:** This project is currently in active development. Consider everything
+**WARNING:** This project is currently in active development. Consider everything
 as technical preview only.
-
-{% endnote %}
 
 ## Prerequisites
 - Kubernetes 1.16+ [get started](https://kubernetes.io/docs/setup/)
@@ -31,14 +27,10 @@ TODO: Add instructions for other public Clouds.
 
 ## Install
 
-{% note %}
-
-**Note:** Do not try to install Starship simultaneously into multiple
+**WARNING:** Do not try to install Starship simultaneously into multiple
 namespaces. That won't work because of system limitations.
 If you accidentally did that, follow the [uninstall](#Uninstall) instructions
 to remove all artifacts and reinstall.
-
-{% endnote %}
 
 Change namespace to your own, here we use `tricorder` as an example.
 
