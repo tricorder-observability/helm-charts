@@ -14,8 +14,13 @@ spec:
       labels:
         {{- include "tricorder.selectorLabels" . | nindent 8 }}
     spec:
+      # Required to get consistent and universal PIDs on the host environment
+      hostPID: true
       containers:
         - name: {{ .Chart.Name }}-tricorder-agent
           image: "{{ .Values.agent.image.repository }}:{{ .Values.images.tag | default .Values.agent.image.tag }}"
           args: ["--module_deployer_address={{ include "tricorder.fullname" . }}-tricorder-api-server:50051"]
           imagePullPolicy: Always
+          securityContext:
+            # Required to run eBPF programs
+            privileged: true
