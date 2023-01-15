@@ -461,6 +461,17 @@ promscale:
     limits:
       cpu: "1"
       memory: 1Gi
+  # promscale configuration options. Values presented in this section are defaults. For full list of settings
+  # and their default values go to https://github.com/timescale/promscale/blob/master/docs/configuration.md
+  # Note that configuration options set here can be overriden by extraEnv as well as extraArgs.
+  # Arguments passed in extraArgs take precedence over any other option.
+  config:
+    startup.dataset.config: |
+      metrics:
+        compress_data: true
+        default_retention_period: 7d
+      traces:
+        default_retention_period: 7d
 
 kube-prometheus-stack:
   enabled: true
