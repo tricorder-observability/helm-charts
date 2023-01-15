@@ -57,7 +57,6 @@ with `--set` flags.
 
 ### Override default values
 
-- Override by helm `--set` flag
 ```shell
 # Change service type to ClusterIP
 helm upgrade my-tricorder tricorder-stable/tricorder -n tricorder \
@@ -66,17 +65,6 @@ helm upgrade my-tricorder tricorder-stable/tricorder -n tricorder \
 # Use specified container image tag
 helm upgrade my-tricorder tricorder-stable/tricorder -n tricorder \
     --set tag=<a specific tag>
-```
-
-- Override by custom of [values.yaml](./charts/tricorder/values.yaml) file
-
-For some reason, we could not override settings by helm `--set` flags, so, we need to download the [values.yaml](./charts/tricorder/values.yaml) and configure these settings in the [values.yaml](./charts/tricorder/values.yaml) configuration file, and then, spec your values.yaml by `-f`
-
-```bash
-helm install -f values.yaml my-tricorder tricorder-stable/tricorder -n tricorder
-
-# or upgrade by using your custom values.yaml
-helm upgrade -f values.yaml my-tricorder tricorder-stable/tricorder -n tricorder
 ```
 
 ## Install from local repo
@@ -97,15 +85,25 @@ swap `tricorder-stable/tricorder` with `charts/tricorder` when the PWD is the
 root of the repo.
 
 ## Data Retention
-Metric and Trace data has an automated retention that drops data after a certain age. The default retention is 7 days which can be customized.
-
-**WARNING:** Before you install the Starship Helm chart, you need to download the [values.yaml](./charts/tricorder/values.yaml) and configure these settings in the [values.yaml](./charts/tricorder/values.yaml) configuration file.
-
-e.g. We can change `7 days` to `30 days` by change `startup.dataset.config` settings in values.yaml:
+Metric and Trace data has an automated retention that drops data after a certain age. The default retention is 7 days:
 
 ```yaml
 promscale:
-······
+  config:
+    startup.dataset.config: |
+      metrics:
+        compress_data: true
+        default_retention_period: 7d
+      traces:
+        default_retention_period: 7d
+```
+
+and above retention can be customized by `--values` flag, We can change `default_retention_period`'s value from `7 days` to `30 days`:
+
+- create patch yaml file for custom values:
+```shell
+cat > rentention_patch.yaml << EOF
+promscale:
   config:
     startup.dataset.config: |
       metrics:
@@ -113,6 +111,14 @@ promscale:
         default_retention_period: 30d
       traces:
         default_retention_period: 30d
+EOF
+```
+
+- override default settings by `--values` flag:
+
+```shell
+helm install my-tricorder tricorder-stable/tricorder -n tricorder \
+    --values rentention_patch.yaml
 ```
 
 ## Uninstall
