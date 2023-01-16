@@ -42,15 +42,7 @@ kubectl create namespace tricorder
 helm install my-tricorder tricorder-stable/tricorder -n tricorder
 ```
 
-The Helm charts in this repo come with an
-[Opentelemetry Demo](https://github.com/open-telemetry/opentelemetry-demo).
-By default, it's not installed. Use `--set opentelemetry-demo.enabled=true`
-with `helm install` to install it
-
-```shell
-helm install my-tricorder tricorder-stable/tricorder -n tricorder \
-    --set opentelemetry-demo.enabled=true
-```
+[Optional][Send OpenTelemetry data to Starship](./docs/send-otlp-data-to-starship.md).
 
 As usual, you can override configuration values defined in `Values.yaml`
 with `--set` flags.
@@ -83,6 +75,20 @@ helm install my-tricorder charts/tricorder -n tricorder
 All commands listed in the previous [install](#Install) section works when you
 swap `tricorder-stable/tricorder` with `charts/tricorder` when the PWD is the
 root of the repo.
+
+## Access the Starship managenment UI by expose services using kubectl port-forward
+
+Starship will need the services exposed outside of the Kubernetes cluster in order to use them. You can expose the services to your local system using the `kubectl port-forward` command or by configuring service types (ie: LoadBalancer) with optionally deployed ingress resources.
+
+To expose the Starship managenment UI service use the following command (replace `my-tricorder-api-server` and `-n tricorder` with your Helm chart release name accordingly):
+
+```shell
+$ kubectl -n tricorder port-forward service/my-tricorder-api-server 18080:80
+```
+
+With the Starship managenment UI set up, you can access:
+
+Starship managenment UI: http://localhost:18080/
 
 ## Data Retention
 Metric and Trace data has an automated retention that drops data after a certain age. The default retention is 7 days:
