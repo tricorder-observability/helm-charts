@@ -45,7 +45,7 @@ kubectl create namespace tricorder
 helm install my-tricorder tricorder-stable/tricorder -n tricorder
 ```
 
-[Optional][Send OpenTelemetry data to Starship](./docs/send-otlp-data-to-starship.md).
+**Optional:** [Send OpenTelemetry data to Starship](./docs/send-otlp-data-to-starship.md).
 
 As usual, you can override configuration values defined in `Values.yaml`
 with `--set` flags.
@@ -81,9 +81,14 @@ root of the repo.
 
 ## Access the Starship managenment UI by expose services using kubectl port-forward
 
-Starship will need the services exposed outside of the Kubernetes cluster in order to use them. You can expose the services to your local system using the `kubectl port-forward` command or by configuring service types (ie: LoadBalancer) with optionally deployed ingress resources.
+Starship will need the services exposed outside of the Kubernetes cluster in
+order to use them. You can expose the services to your local system using the
+`kubectl port-forward` command or by configuring service types (ie:
+LoadBalancer) with optionally deployed ingress resources.
 
-To expose the Starship managenment UI service use the following command (replace `my-tricorder-api-server` and `-n tricorder` with your Helm chart release name accordingly):
+To expose the Starship managenment UI service use the following command (replace
+`my-tricorder-api-server` and `-n tricorder` with your Helm chart release name
+accordingly):
 
 ```shell
 kubectl -n tricorder port-forward service/my-tricorder-api-server 18080:80
@@ -95,7 +100,8 @@ Starship managenment UI: <http://localhost:18080/>
 
 ## Data Retention
 
-Metric and Trace data has an automated retention that drops data after a certain age. The default retention is 7 days:
+Metric and Trace data has an automated retention that drops data after a certain
+age. The default retention is 7 days:
 
 ```yaml
 promscale:
@@ -108,7 +114,8 @@ promscale:
         default_retention_period: 7d
 ```
 
-and above retention can be customized by `--values` flag, We can change `default_retention_period`'s value from `7 days` to `30 days`:
+and above retention can be customized by `--values` flag, We can change
+`default_retention_period`'s value from `7 days` to `30 days`:
 
 - create patch yaml file for custom values:
 
@@ -186,7 +193,8 @@ Prometheus belonging to the release. For a full cleanup run:
 
 ```shell
 kubectl delete -n tricorder $(kubectl get pvc -n tricorder \
-    -l operator.prometheus.io/name=my-tricorder-kube-prometheus-stack-prometheus -o name)
+  -l operator.prometheus.io/name=my-tricorder-kube-prometheus-stack-prometheus \
+  -o name)
 ```
 
 ### Prometheus CRDs, ValidatingWebhookConfiguration and MutatingWebhookConfiguration
