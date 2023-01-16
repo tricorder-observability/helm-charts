@@ -7,12 +7,14 @@ platform, developed by [Tricorder Observability](https://tricorder.dev).
 as technical preview only.
 
 ## Prerequisites
+
 - Kubernetes 1.16+ [get started](https://kubernetes.io/docs/setup/)
 - Helm 3+ [installation](https://helm.sh/docs/intro/install/)
 
 TODO: Add instructions for other public Clouds.
 
 ### AWS EKS
+
 - If you are using AWS EKS, isntall
   [EBS CSI](https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html)
   on your EKS cluster.
@@ -29,7 +31,7 @@ TODO: Add instructions for other public Clouds.
 
 **WARNING:** Do not try to install Starship simultaneously into multiple
 namespaces. That won't work because of system limitations.
-If you accidentally did that, follow the [uninstall](#Uninstall) instructions
+If you accidentally did that, follow the [uninstall](#uninstall) instructions
 to remove all artifacts and reinstall.
 
 Change namespace to your own, here we use `tricorder` as an example.
@@ -72,7 +74,7 @@ helm dep update charts/tricorder
 helm install my-tricorder charts/tricorder -n tricorder
 ```
 
-All commands listed in the previous [install](#Install) section works when you
+All commands listed in the previous [install](#install) section works when you
 swap `tricorder-stable/tricorder` with `charts/tricorder` when the PWD is the
 root of the repo.
 
@@ -83,14 +85,15 @@ Starship will need the services exposed outside of the Kubernetes cluster in ord
 To expose the Starship managenment UI service use the following command (replace `my-tricorder-api-server` and `-n tricorder` with your Helm chart release name accordingly):
 
 ```shell
-$ kubectl -n tricorder port-forward service/my-tricorder-api-server 18080:80
+kubectl -n tricorder port-forward service/my-tricorder-api-server 18080:80
 ```
 
 With the Starship managenment UI set up, you can access:
 
-Starship managenment UI: http://localhost:18080/
+Starship managenment UI: <http://localhost:18080/>
 
 ## Data Retention
+
 Metric and Trace data has an automated retention that drops data after a certain age. The default retention is 7 days:
 
 ```yaml
@@ -107,6 +110,7 @@ promscale:
 and above retention can be customized by `--values` flag, We can change `default_retention_period`'s value from `7 days` to `30 days`:
 
 - create patch yaml file for custom values:
+
 ```shell
 cat > rentention_patch.yaml << EOF
 promscale:
@@ -149,6 +153,7 @@ kubectl delete -n tricorder \
 ```
 
 ### Cleanup configmap
+
 ```shell
 kubectl delete -n tricorder \
     $(kubectl get configmap -n tricorder -l "app=my-tricorder-promscale" -o name)
@@ -164,6 +169,7 @@ kubectl delete secret -n tricorder my-tricorder-kube-prometheus-stack-admission
 ```
 
 ### Cleanup DB PVCs and Backup
+
 Removing the deployment does not remove the Persistent Volume Claims (pvc)
 belonging to the release. For a full cleanup run:
 
