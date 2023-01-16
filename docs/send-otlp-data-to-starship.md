@@ -71,7 +71,7 @@ kubectl create ns otel-demo
 
 To install the chart with the release name `my-otel-demo`, run the following command:
 
-**WARNING:** Since StarShip Helm Chart already has Prometheus/Grafana installed and uses TimeScaleDB to store trace data, you can disable duplicate components in installation:
+**WARNING:** Since Starship Helm Chart already has Prometheus/Grafana installed and uses TimeScaleDB to store trace data, you can disable duplicate components in installation:
 
 ```shell
 helm install my-otel-demo open-telemetry/opentelemetry-demo -n otel-demo \
