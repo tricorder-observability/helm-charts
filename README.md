@@ -42,15 +42,7 @@ kubectl create namespace tricorder
 helm install my-tricorder tricorder-stable/tricorder -n tricorder
 ```
 
-The Helm charts in this repo come with an
-[Opentelemetry Demo](https://github.com/open-telemetry/opentelemetry-demo).
-By default, it's not installed. Use `--set opentelemetry-demo.enabled=true`
-with `helm install` to install it
-
-```shell
-helm install my-tricorder tricorder-stable/tricorder -n tricorder \
-    --set opentelemetry-demo.enabled=true
-```
+[Optional][Send OpenTelemetry data to Starship](./docs/send-otlp-data-to-starship.md).
 
 As usual, you can override configuration values defined in `Values.yaml`
 with `--set` flags.
