@@ -84,6 +84,43 @@ All commands listed in the previous [install](#Install) section works when you
 swap `tricorder-stable/tricorder` with `charts/tricorder` when the PWD is the
 root of the repo.
 
+## Data Retention
+Metric and Trace data has an automated retention that drops data after a certain age. The default retention is 7 days:
+
+```yaml
+promscale:
+  config:
+    startup.dataset.config: |
+      metrics:
+        compress_data: true
+        default_retention_period: 7d
+      traces:
+        default_retention_period: 7d
+```
+
+and above retention can be customized by `--values` flag, We can change `default_retention_period`'s value from `7 days` to `30 days`:
+
+- create patch yaml file for custom values:
+```shell
+cat > rentention_patch.yaml << EOF
+promscale:
+  config:
+    startup.dataset.config: |
+      metrics:
+        compress_data: true
+        default_retention_period: 30d
+      traces:
+        default_retention_period: 30d
+EOF
+```
+
+- override default settings by `--values` flag:
+
+```shell
+helm install my-tricorder tricorder-stable/tricorder -n tricorder \
+    --values rentention_patch.yaml
+```
+
 ## Uninstall
 
 To uninstall a release you can run:
