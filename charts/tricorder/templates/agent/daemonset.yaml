@@ -14,8 +14,31 @@ spec:
       labels:
         {{- include "tricorder.selectorLabels" . | nindent 8 }}
     spec:
+      # Required to get consistent and universal PIDs on the host environment
+      hostPID: true
+      volumes:
+      - name: lib-modules
+        hostPath:
+          # Required by BCC to access installed kernel headers
+          path: /lib/modules
+          type: Directory
+      - name: sys
+        hostPath:
+          # Required by BCC (usage unclear, need more investigation)
+          path: /sys
+          type: Directory
       containers:
-        - name: {{ .Chart.Name }}-tricorder-agent
-          image: "{{ .Values.agent.image.repository }}:{{ .Values.images.tag | default .Values.agent.image.tag }}"
-          args: ["--module_deployer_address={{ include "tricorder.fullname" . }}-tricorder-api-server:50051"]
-          imagePullPolicy: Always
+      - name: {{ .Chart.Name }}-tricorder-agent
+        image: "{{ .Values.agent.image.repository }}:{{ .Values.images.tag | default .Values.agent.image.tag }}"
+        args: ["--module_deployer_address={{ include "tricorder.fullname" . }}-tricorder-api-server:50051"]
+        imagePullPolicy: Always
+        securityContext:
+          # Required to run eBPF programs
+          privileged: true
+        volumeMounts:
+        - name: sys
+          mountPath: /sys
+          readOnly: true
+        - name: lib-modules
+          mountPath: /lib/modules
+          readOnly: true
