@@ -70,8 +70,6 @@ apiServer:
   image:
     repository: public.ecr.aws/w3q2q1s5/api-server
     pullPolicy: Always
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: "80ec60290aca37021fbfd853d1067005cddfd4bf_main"
 
   persistentVolumes:
     data:
@@ -121,15 +119,11 @@ agent:
   image:
     repository: public.ecr.aws/w3q2q1s5/tricorder-agent
     pullPolicy: IfNotPresent
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: "80ec60290aca37021fbfd853d1067005cddfd4bf_main"
 
 ui:
   image:
     repository: public.ecr.aws/w3q2q1s5/mgmt-ui
     pullPolicy: IfNotPresent
-    # Overrides the image tag whose default is the chart appVersion.
-    tag: "80ec60290aca37021fbfd853d1067005cddfd4bf_main"
 
   ports:
     uihttp:
