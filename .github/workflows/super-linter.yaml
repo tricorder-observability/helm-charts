@@ -14,7 +14,9 @@ jobs:
         with:
           fetch-depth: 0
       - name: Lint Code Base
-        uses: github/super-linter@v4
+        # https://github.com/github/super-linter#slim-image
+        # Linters missing from slim image are not useful for Tricorder codebase
+        uses: github/super-linter/slim@v4
         env:
           # Only new or edited files are linted
           VALIDATE_ALL_CODEBASE: false
