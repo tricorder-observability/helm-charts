@@ -29,14 +29,7 @@ jobs:
         with:
           create-kind-cluster: "false"
 
-      - name: release tricorder
+      - name: Release tricorder charts
         uses: helm/chart-releaser-action@v1.4.1
-        env:
-          CR_TOKEN: "${{ secrets.ACTIONS_TOKEN }}"
-
-      - name: release tricorder starship & ui
-        uses: helm/chart-releaser-action@v1.4.1
-        with:
-          charts_dir: charts/tricorder/charts
         env:
           CR_TOKEN: "${{ secrets.ACTIONS_TOKEN }}"
