@@ -105,7 +105,7 @@ like AWS LoadBalancer Controller,
 you will be able to get an external-ip to access the service directly:
 
 ```shell
-helm upgrade my-starship tricorder-stable/starship -n tricorder --set apiServer.service.type=LoadBalancer
+helm upgrade my-starship tricorder-stable/starship -n tricorder
 kubectl get svc -n tricorder my-starship-tricorder-api-server
 ```
 
