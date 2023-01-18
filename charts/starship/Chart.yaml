@@ -9,8 +9,6 @@ maintainers:
   - name: JaredTan95
   - name: yaxiong-zhao
 
-version: 0.0.31
-
 # TODO(yzhao): Let this be propagated as the image tags.
 appVersion: "v0.1.0"
 
