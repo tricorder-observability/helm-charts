@@ -100,7 +100,7 @@ Starship managenment UI: <http://localhost:18080/>
 
 ## Expose Starship managenment UI with Load Balancer
 
-The port-forward method can only be run locally and used by yourself. 
+The port-forward method can only be run locally and used by yourself.
 If you want other people to access the application, recommend using the Load Balancer method。
 
 Using the following command to find column External IP
@@ -112,7 +112,7 @@ kubectl get svc -n tricorder starship-tricorder-api-server
 
 ![image](./image/api-server-svc-url.jpeg)
 
-Navigate to `http://${External-IP}`  in your browser, be sure to note that the protocol is http, not https 
+Navigate to `http://${External-IP}` in your browser, be sure to note that the protocol is http, not https
 
 ## Data Retention
 
