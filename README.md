@@ -108,7 +108,7 @@ kubectl get svc -n tricorder starship-tricorder-api-server
 
 ![image](./image/api-server-svc-url.jpeg)
 
-Navigate to `http://${External-IP}`  in your browser. 
+Navigate to `+http+://${External-IP}`  in your browser, be sure to note that the protocol is http, not https
 
 ## Data Retention
 
