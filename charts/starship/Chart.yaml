@@ -9,8 +9,10 @@ maintainers:
   - name: JaredTan95
   - name: yaxiong-zhao
 
-# Chart version
-version: 0.0.30
+version: 0.0.31
+
+# TODO(yzhao): Let this be propagated as the image tags.
+appVersion: "v0.1.0"
 
 dependencies:
   - name: timescaledb-single
