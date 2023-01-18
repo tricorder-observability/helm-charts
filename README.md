@@ -98,18 +98,6 @@ With the Starship managenment UI set up, you can access:
 
 Starship managenment UI: <http://localhost:18080/>
 
-## Expose Starship managenment UI with  Load Balancer
-Using the following command to find column External IP
-
-```shell
-helm upgrade starship tricorder-stable/straship --set apiServer.service.type=LoadBalancer
-kubectl get svc -n tricorder starship-tricorder-api-server
-```
-
-![image](./image/api-server-svc-url.jpeg)
-
-Navigate to `+http+://${External-IP}`  in your browser, be sure to note that the protocol is http, not https
-
 ## Data Retention
 
 Metric and Trace data has an automated retention that drops data after a certain
