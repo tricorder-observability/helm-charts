@@ -99,11 +99,10 @@ Starship managenment UI: <http://localhost:18080/>
 
 ## Expose Starship managenment UI with Load Balancer
 
-The port-forward method can only be run locally and used by yourself.
-If you want other people to access the application, recommend using
-the Load Balancer method。
-
-Using the following command to find column External IP
+Using the following command to change service type to LoadBalancer,
+and if your cluster has configured LoadBalancer that supports external access,
+like AWS LoadBalancer Controller,
+you will be able to get an external-ip to access the service directly:
 
 ```shell
 helm upgrade starship tricorder-stable/straship --set apiServer.service.type=LoadBalancer
