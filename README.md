@@ -102,9 +102,7 @@ Starship managenment UI: <http://localhost:18080/>
 Using the following command to find column External IP
 
 ```shell
-// set apiServer service LoadBalancer
 helm upgrade starship tricorder-stable/straship --set apiServer.service.type=LoadBalancer
-// get service
 kubectl get svc -n tricorder starship-tricorder-api-server
 ```
 
