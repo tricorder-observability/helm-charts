@@ -8,7 +8,7 @@ sources:
 maintainers:
   - name: JaredTan95
   - name: yaxiong-zhao
-  
+
 # Chart version
 version: 0.0.31
 
