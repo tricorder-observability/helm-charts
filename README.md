@@ -99,7 +99,7 @@ With the Starship managenment UI set up, you can access:
 Starship managenment UI: <http://localhost:18080/>
 
 ## Expose Starship managenment UI with  Load Balancer
-find column External IP
+use the following command, find column External IP
 
 ```shell
 kubectl get svc -n tricorder my-tricorder-tricorder-api-server
@@ -107,7 +107,7 @@ kubectl get svc -n tricorder my-tricorder-tricorder-api-server
 
 ![image](./image/api-server-svc-url.jpeg)
 
-Navigate to External IP  in your browser. 
+Navigate to http://${External-IP}  in your browser. 
 
 ## Data Retention
 
