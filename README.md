@@ -3,7 +3,6 @@
 This repository contains Helm charts for deploying Starship Observability
 platform, developed by [Tricorder Observability](https://tricorder.dev).
 
-
 **WARNING:** This project is currently in active development. Consider everything
 as technical preview only.
 
@@ -97,6 +96,23 @@ kubectl -n tricorder port-forward service/my-starship-api-server 18080:80
 With the Starship managenment UI set up, you can access:
 
 Starship managenment UI: <http://localhost:18080/>
+
+## Expose Starship managenment UI with Load Balancer
+
+Using the following command to change service type to LoadBalancer,
+and if your cluster has configured LoadBalancer that supports external access,
+like AWS LoadBalancer Controller,
+you will be able to get an external-ip to access the service directly:
+
+```shell
+helm upgrade starship tricorder-stable/straship --set apiServer.service.type=LoadBalancer
+kubectl get svc -n tricorder starship-tricorder-api-server
+```
+
+![image](./image/api-server-svc-url.jpeg)
+
+Navigate to `http://${External-IP}` in your browser, be sure to note that
+the protocol is http, not https
 
 ## Data Retention
 
