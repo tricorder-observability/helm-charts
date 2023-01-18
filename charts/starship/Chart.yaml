@@ -9,8 +9,7 @@ maintainers:
   - name: JaredTan95
   - name: yaxiong-zhao
 
-# TODO(yzhao): Let this be propagated as the image tags.
-appVersion: "v0.1.0"
+version: 0.0.31
 
 dependencies:
   - name: timescaledb-single
