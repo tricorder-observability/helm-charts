@@ -42,7 +42,7 @@ helm repo add tricorder-stable \
     https://tricorder-observability.github.io/helm-charts
 helm repo update
 kubectl create namespace tricorder
-helm install my-tricorder tricorder-stable/tricorder -n tricorder
+helm install my-starship tricorder-stable/starship -n tricorder
 ```
 
 **Optional:** [Send OpenTelemetry data to Starship](./docs/send-otlp-data-to-starship.md).
@@ -54,32 +54,32 @@ with `--set` flags.
 
 ```shell
 # Change service type to ClusterIP
-helm upgrade my-tricorder tricorder-stable/tricorder -n tricorder \
+helm upgrade my-starship tricorder-stable/starship -n tricorder \
     --set service.type=ClusterIP
 
 # Use specified container image tag
-helm upgrade my-tricorder tricorder-stable/tricorder -n tricorder \
+helm upgrade my-starship tricorder-stable/starship -n tricorder \
     --set tag=<a specific tag>
 ```
 
 ## Install from local repo
 
-`git clone` this repo repo, and replace `tricorder-stable/tricorder` with the
-charts local path `charts/tricorder`.
+`git clone` this repo repo, and replace `tricorder-stable/starship` with the
+charts local path `charts/starship`.
 
 ```shell
 git clone git@github.com:tricorder-observability/helm-charts.git
 cd helm-charts
 # You'll need this step to fetch the dependent charts
-helm dep update charts/tricorder
-helm install my-tricorder charts/tricorder -n tricorder
+helm dep update charts/starship
+helm install my-starship charts/starship -n tricorder
 ```
 
 All commands listed in the previous [install](#install) section works when you
-swap `tricorder-stable/tricorder` with `charts/tricorder` when the PWD is the
+swap `tricorder-stable/starship` with `charts/starship` when the PWD is the
 root of the repo.
 
-## Access the Starship managenment UI by expose services using kubectl port-forward
+## Expose Starship managenment UI with `kubectl port-forward`
 
 Starship will need the services exposed outside of the Kubernetes cluster in
 order to use them. You can expose the services to your local system using the
@@ -87,11 +87,11 @@ order to use them. You can expose the services to your local system using the
 LoadBalancer) with optionally deployed ingress resources.
 
 To expose the Starship managenment UI service use the following command (replace
-`my-tricorder-api-server` and `-n tricorder` with your Helm chart release name
+`my-starship-api-server` and `-n tricorder` with your Helm chart release name
 accordingly):
 
 ```shell
-kubectl -n tricorder port-forward service/my-tricorder-api-server 18080:80
+kubectl -n tricorder port-forward service/my-starship-api-server 18080:80
 ```
 
 With the Starship managenment UI set up, you can access:
@@ -135,7 +135,7 @@ EOF
 - override default settings by `--values` flag:
 
 ```shell
-helm install my-tricorder tricorder-stable/tricorder -n tricorder \
+helm install my-starship tricorder-stable/starship -n tricorder \
     --values rentention_patch.yaml
 ```
 
@@ -144,7 +144,7 @@ helm install my-tricorder tricorder-stable/tricorder -n tricorder \
 To uninstall a release you can run:
 
 ```shell
-helm uninstall my-tricorder -n tricorder
+helm uninstall my-starship -n tricorder
 ```
 
 After uninstalling helm release some objects will be left over. To remove them
@@ -164,7 +164,7 @@ kubectl delete -n tricorder \
 
 ```shell
 kubectl delete -n tricorder \
-    $(kubectl get configmap -n tricorder -l "app=my-tricorder-promscale" -o name)
+    $(kubectl get configmap -n tricorder -l "app=my-starship-promscale" -o name)
 ```
 
 ### Cleanup Kube-Prometheus secret
@@ -173,7 +173,7 @@ One of the Kube-Prometheus secrets created with the deployment isn't deleted.
 This secret needs to be manually deleted:
 
 ```shell
-kubectl delete secret -n tricorder my-tricorder-kube-prometheus-stack-admission
+kubectl delete secret -n tricorder my-starship-kube-prometheus-stack-admission
 ```
 
 ### Cleanup DB PVCs and Backup
@@ -183,7 +183,7 @@ belonging to the release. For a full cleanup run:
 
 ```shell
 kubectl delete -n tricorder \
-    $(kubectl get pvc -n tricorder -l release=my-tricorder -o name)
+    $(kubectl get pvc -n tricorder -l release=my-starship -o name)
 ```
 
 ### Prometheus PVCs
@@ -193,7 +193,7 @@ Prometheus belonging to the release. For a full cleanup run:
 
 ```shell
 kubectl delete -n tricorder $(kubectl get pvc -n tricorder \
-  -l operator.prometheus.io/name=my-tricorder-kube-prometheus-stack-prometheus \
+  -l operator.prometheus.io/name=my-starship-kube-prometheus-stack-prometheus \
   -o name)
 ```
 
@@ -211,8 +211,8 @@ kubectl delete crd alertmanagerconfigs.monitoring.coreos.com \
 ```
 
 ```shell
-kubectl delete MutatingWebhookConfiguration my-tricorder-kube-promethe-admission
-kubectl delete ValidatingWebhookConfiguration my-tricorder-kube-prometheus-admission
+kubectl delete MutatingWebhookConfiguration my-starship-kube-promethe-admission
+kubectl delete ValidatingWebhookConfiguration my-starship-kube-prometheus-admission
 ```
 
 ### Delete Namespace
