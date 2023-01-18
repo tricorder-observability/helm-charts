@@ -107,7 +107,7 @@ kubectl get svc -n tricorder my-tricorder-tricorder-api-server
 
 ![image](./image/api-server-svc-url.jpeg)
 
-Navigate to http://${External-IP}  in your browser. 
+Navigate to `http://${External-IP}`  in your browser. 
 
 ## Data Retention
 
