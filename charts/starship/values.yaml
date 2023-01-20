@@ -171,19 +171,6 @@ timescaledb-single:
       PATRONI_REPLICATION_PASSWORD: "tricorder"
       PATRONI_admin_PASSWORD: "tricorder"
 
-    # This secret should contain environment variables that influence pgBackRest.
-    pgbackrest:
-      PGBACKREST_REPO1_S3_REGION: ""
-      PGBACKREST_REPO1_S3_KEY: ""
-      PGBACKREST_REPO1_S3_KEY_SECRET: ""
-      PGBACKREST_REPO1_S3_BUCKET: ""
-      PGBACKREST_REPO1_S3_ENDPOINT: "s3.amazonaws.com"
-
-    # Selector used to provision your own Secret containing pgbackrest configuration details
-    # This is mutually exclusive with `pgbackrest` option and takes precedence over it.
-    # WARNING: Use this option with caution
-    pgbackrestSecretName: ""
-
   backup:
     enabled: false
 
@@ -232,42 +219,10 @@ timescaledb-single:
     # in sorted order only once: After a cluster initialization
     # Some examples:
     - configMap:
+        name: custom-init-scripts
+        optional: true
+    - configMap:
         name: timescale-post-init
-  # Values for defining the primary & replica Kubernetes Services.
-  service:
-    primary:
-      # One of (ClusterIP | LoadBalancer | NodePort). Headless services are not supported.
-      type: ClusterIP
-      # The port used by the service.
-      port: 5432
-      # Additional labels to be added to the Service.
-      labels: {}
-      # Additional annotations to be added to the Service.
-      annotations: {}
-      # Define extra fields to be interpolated into the Service spec.
-      #
-      # This allows for adding support for new features and functionality which may not yet
-      # be directly supported in this chart.
-      spec: {}
-      # loadBalancerSourceRanges:
-      # - "0.0.0.0/0"
-
-    replica:
-      # One of (ClusterIP | LoadBalancer | NodePort). Headless services are not supported.
-      type: ClusterIP
-      # The port used by the service.
-      port: 5432
-      # Additional labels to be added to the Service.
-      labels: {}
-      # Additional annotations to be added to the Service.
-      annotations: {}
-      # Define extra fields to be interpolated into the Service spec.
-      #
-      # This allows for adding support for new features and functionality which may not yet
-      # be directly supported in this chart.
-      spec: {}
-      # loadBalancerSourceRanges:
-      # - "0.0.0.0/0"
 
   persistentVolumes:
     # For sanity reasons, the actual PGDATA and wal directory will be subdirectories of the Volume mounts,
@@ -359,10 +314,6 @@ timescaledb-single:
   # https://github.com/prometheus-community/postgres_exporter
   prometheus:
     enabled: true
-    image:
-      repository: quay.io/prometheuscommunity/postgres-exporter
-      tag: v0.11.1
-      pullPolicy: Always
     # Extra custom environment variables for prometheus.
     # These should be an EnvVar, as this allows you to inject secrets into the environment
     # https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#envvar-v1-core
@@ -572,8 +523,10 @@ kube-prometheus-stack:
       scrapeInterval: "1m"
       evaluationInterval: "1m"
       scrapeInterval: "10s"
-      replicas: 2
+      replicas: 1
       retention: 1d
+      # this should not larger than PVC storage size
+      retentionSize: 512MB
       replicaExternalLabelName: "__replica__"
       # Promscale requires a cluster label to be present for high availability mode.
       prometheusExternalLabelName: "cluster"

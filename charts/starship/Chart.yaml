@@ -10,7 +10,7 @@ maintainers:
   - name: yaxiong-zhao
 
 # Chart version
-version: 0.0.31
+version: 0.0.32
 
 dependencies:
   - name: timescaledb-single
@@ -22,6 +22,6 @@ dependencies:
     repository: "https://charts.timescale.com"
     condition: promscale.enabled
   - name: kube-prometheus-stack
-    version: 43.2.1
+    version: 44.2.1
     repository: "https://prometheus-community.github.io/helm-charts"
     condition: kube-prometheus-stack.enabled
