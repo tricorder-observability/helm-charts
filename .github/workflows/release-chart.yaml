@@ -1,10 +1,10 @@
 name: Release Charts
 
 on:
+  # Triggered on pushes to main branch with helm-charts-v* tag, i.e., a release.
   push:
-    branches:
-      - main
-    tags: ["v*"]
+    branches: ["main"]
+    tags: ["release-v*"]
 
 jobs:
   release:
@@ -33,3 +33,10 @@ jobs:
         uses: helm/chart-releaser-action@v1.4.1
         env:
           CR_TOKEN: "${{ secrets.ACTIONS_TOKEN }}"
+
+      - name: Copy README.md To Branches Action
+        uses: planetoftheweb/copy-to-branches@v1.2
+        env:
+          key: main
+          branches: gh-pages
+          files: README.md
