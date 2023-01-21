@@ -17,15 +17,9 @@ TODO: Add instructions for other public Clouds.
 
 - If you are using AWS EKS, isntall
   [EBS CSI](https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html)
-  on your EKS cluster.
-
-  This is required because Helm charts create
+  on your EKS cluster. This is required because Helm charts create
   [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
   for database pods, which requires EBS CSI.
-- You also need to install
-  [AWS Load Balancer Controller](https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html)
-  in order to use LoadBalancer service type, which is Starship's default service
-  type.
 
 ## Install
 
