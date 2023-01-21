@@ -4,7 +4,7 @@ on:
   # Triggered on pushes to main branch with helm-charts-v* tag, i.e., a release.
   push:
     branches: ["main"]
-    tags: ["helm-charts-v*"]
+    tags: ["release-v*"]
 
 jobs:
   release:
