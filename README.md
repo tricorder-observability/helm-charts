@@ -17,15 +17,9 @@ TODO: Add instructions for other public Clouds.
 
 - If you are using AWS EKS, isntall
   [EBS CSI](https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html)
-  on your EKS cluster.
-
-  This is required because Helm charts create
+  on your EKS cluster. This is required because Helm charts create
   [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
   for database pods, which requires EBS CSI.
-- You also need to install
-  [AWS Load Balancer Controller](https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html)
-  in order to use LoadBalancer service type, which is Starship's default service
-  type.
 
 ## Install
 
@@ -105,14 +99,14 @@ like AWS LoadBalancer Controller,
 you will be able to get an external-ip to access the service directly:
 
 ```shell
-helm upgrade starship tricorder-stable/straship --set apiServer.service.type=LoadBalancer
-kubectl get svc -n tricorder starship-tricorder-api-server
+helm upgrade my-starship tricorder-stable/starship -n tricorder
+kubectl get svc -n tricorder my-starship-tricorder-api-server
 ```
 
 ![image](./image/api-server-svc-url.jpeg)
 
-Navigate to `http://${External-IP}` in your browser, be sure to note that
-the protocol is http, not https
+Navigate to `http://${EXTERNAL-IP}` in your browser, note that
+the protocol is HTTP, not HTTPS.
 
 ## Data Retention
 
