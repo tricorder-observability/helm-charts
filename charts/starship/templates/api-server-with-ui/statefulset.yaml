@@ -36,6 +36,9 @@ spec:
         - name: {{ include "tricorder.fullname" . }}-api-server
           securityContext:
             {{- toYaml .Values.apiServer.securityContext | nindent 12 }}
+          env:
+          - name: GIN_MODE
+            value: release
           image: "{{ .Values.apiServer.image.repository }}:{{ .Values.images.tag | default .Values.apiServer.image.tag }}"
           imagePullPolicy: {{ .Values.apiServer.image.pullPolicy }}
           args:
