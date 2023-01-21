@@ -7,7 +7,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 images:
-  tag: "80ec60290aca37021fbfd853d1067005cddfd4bf_main"
+  tag: "b04c8f79aa7016e85989a93f2a9ec1fa440e311e_main"
 
 serviceAccount:
   # Specifies whether a service account should be created

@@ -9,8 +9,8 @@ maintainers:
   - name: JaredTan95
   - name: yaxiong-zhao
 
-# Chart version
-version: 0.0.31
+# Chart version, updating this version requires a release.
+version: 0.0.32
 
 dependencies:
   - name: timescaledb-single
