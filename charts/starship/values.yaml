@@ -117,7 +117,7 @@ apiServer:
 
 agent:
   image:
-    repository: public.ecr.aws/w3q2q1s5/tricorder-agent
+    repository: public.ecr.aws/w3q2q1s5/agent
     pullPolicy: IfNotPresent
 
 ui:
