@@ -1,6 +1,8 @@
 apiVersion: v2
 name: starship
-description: "Helm Charts for Starship, Tricorder Observability's next-generatoin Observability Platform built on eBPF+WASM"
+description: >
+  "Helm Charts for Starship, Tricorder Observability's next-generatoin "
+  "Observability Platform built on eBPF+WASM"
 
 sources:
   - https://github.com/tricorder-observability/helm-charts
@@ -11,6 +13,9 @@ maintainers:
 
 # Chart version, updating this version requires a release.
 version: 0.0.33
+
+# Use this as the tag of the images.
+appVersion: "b04c8f79aa7016e85989a93f2a9ec1fa440e311e_main"
 
 dependencies:
   - name: timescaledb-single
