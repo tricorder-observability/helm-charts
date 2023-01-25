@@ -68,7 +68,7 @@ apiServer:
     type: LoadBalancer
 
   image:
-    repository: public.ecr.aws/w3q2q1s5/api-server
+    repository: public.ecr.aws/tricorder/api-server
     pullPolicy: Always
 
   persistentVolumes:
@@ -117,12 +117,12 @@ apiServer:
 
 agent:
   image:
-    repository: public.ecr.aws/w3q2q1s5/agent
+    repository: public.ecr.aws/tricorder/agent
     pullPolicy: IfNotPresent
 
 ui:
   image:
-    repository: public.ecr.aws/w3q2q1s5/mgmt-ui
+    repository: public.ecr.aws/tricorder/mgmt-ui
     pullPolicy: IfNotPresent
 
   ports:
@@ -476,7 +476,7 @@ kube-prometheus-stack:
     #defaultDashboardsTimezone: Asia/Shanghai
     adminPassword: tricorder
     image:
-      repository: public.ecr.aws/w3q2q1s5/tricorder-frontend
+      repository: public.ecr.aws/tricorder/grafana
       # Overrides the Grafana image tag whose default is the chart appVersion
       # TODO(yzhao): Change this to inherit the tag of starship
       tag: v0.0.9
