@@ -1,10 +1,17 @@
 # Starship Helm charts
 
-This repository contains Helm charts for deploying Starship Observability
-platform, developed by [Tricorder Observability](https://tricorder.dev).
+This repository contains Helm charts for deploying [Tricorder Observability](https://tricorder.dev)'s
+Starship Observability platform.
 
-**WARNING:** This project is currently in active development. Consider everything
-as technical preview only.
+Starship currently only runs on Kubernetes. Starship provides eBPF-powered instrumentation-free Service Map.
+Where you don't need to change a single line of code in your application. Instantly access a single-pane view of
+the high-level status of your Cloud Native applications.
+
+Starship also collects [Prometheus](https://prometheus.io/) and [OpenTelemetry](https://opentelemetry.io/).
+
+Starship currently uses [Grafana](https://github.com/grafana/grafana) for data visualization.
+
+**WARNING:** This project is currently in active development. Consider this a technical preview only.
 
 ## Prerequisites
 
@@ -23,11 +30,6 @@ TODO: Add instructions for other public Clouds.
 
 ## Install
 
-**WARNING:** Do not try to install Starship simultaneously into multiple
-namespaces. That won't work because of system limitations.
-If you accidentally did that, follow the [uninstall](#uninstall) instructions
-to remove all artifacts and reinstall.
-
 Change namespace to your own, here we use `tricorder` as an example.
 
 ```shell
@@ -40,10 +42,24 @@ helm install my-starship tricorder-stable/starship -n tricorder
 
 **Optional:** [Send OpenTelemetry data to Starship](./docs/send-otlp-data-to-starship.md).
 
-As usual, you can override configuration values defined in `Values.yaml`
-with `--set` flags.
+## Expose Starship managenment UI with Load Balancer
 
-## Expose Starship managenment UI with `kubectl port-forward`
+Using the following command to change service type to LoadBalancer,
+and if your cluster has configured LoadBalancer that supports external access,
+like AWS LoadBalancer Controller,
+you will be able to get an external-ip to access the service directly:
+
+```shell
+helm upgrade my-starship tricorder-stable/starship -n tricorder
+kubectl get svc -n tricorder my-starship-tricorder-api-server
+```
+
+![image](./image/api-server-svc-url.jpeg)
+
+Navigate to `http://${EXTERNAL-IP}` in your browser, note that
+the protocol is HTTP, not HTTPS.
+
+## Access Starship Web UI with `kubectl port-forward`
 
 Starship will need the services exposed outside of the Kubernetes cluster in
 order to use them. You can expose the services to your local system using the
@@ -62,22 +78,6 @@ With the Starship managenment UI set up, you can access:
 
 Starship managenment UI: <http://localhost:18080/>
 
-## Expose Starship managenment UI with Load Balancer
-
-Using the following command to change service type to LoadBalancer,
-and if your cluster has configured LoadBalancer that supports external access,
-like AWS LoadBalancer Controller,
-you will be able to get an external-ip to access the service directly:
-
-```shell
-helm upgrade my-starship tricorder-stable/starship -n tricorder
-kubectl get svc -n tricorder my-starship-tricorder-api-server
-```
-
-![image](./image/api-server-svc-url.jpeg)
-
-Navigate to `http://${EXTERNAL-IP}` in your browser, note that
-the protocol is HTTP, not HTTPS.
 
 ## Data Retention
 
@@ -206,6 +206,9 @@ kubectl delete namespace tricorder
 
 ### Override default values
 
+You can override configuration values defined in `charts/starship/Values.yaml`
+with `--set` flags.
+
 ```shell
 # Change service type to ClusterIP
 helm upgrade my-starship tricorder-stable/starship -n tricorder \
@@ -232,3 +235,12 @@ helm install my-starship charts/starship -n tricorder
 All commands listed in the previous [install](#install) section works when you
 swap `tricorder-stable/starship` with `charts/starship` when the PWD is the
 root of the repo.
+
+### Caveats
+
+**WARNING** Do not install Starship simultaneously into multiple namespaces.
+That won't work because of system limitations.
+If you accidentally did that, follow the [uninstall](#uninstall) instructions
+to remove all artifacts and reinstall.
+
+**WARNING** Do not install multiple releases in the same namespace.
