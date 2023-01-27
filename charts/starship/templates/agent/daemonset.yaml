@@ -45,7 +45,7 @@ spec:
           privileged: true
         volumeMounts:
         - name: sys
-          mountPath: /sys
+          mountPath: /host/sys
           readOnly: true
         - name: lib-modules
           mountPath: /lib/modules
