@@ -42,22 +42,24 @@ helm install my-starship tricorder-stable/starship -n tricorder
 
 **Optional:** [Send OpenTelemetry data to Starship](./docs/send-otlp-data-to-starship.md).
 
-## Expose Starship managenment UI with Load Balancer
+## Access Starship web UI with through LoadBalancer external IP
 
-Using the following command to change service type to LoadBalancer,
-and if your cluster has configured LoadBalancer that supports external access,
-like AWS LoadBalancer Controller,
-you will be able to get an external-ip to access the service directly:
+Starship by default expose web UI service through `LoadBalancer` service.
+If your cluster has configured LoadBalancer that supports external access,
+like AWS LoadBalancer Controller or an Ingress Controller, you can access the service
+directly through `api-server` service's `ExteranIP`:
 
-```shell
-helm upgrade my-starship tricorder-stable/starship -n tricorder
-kubectl get svc -n tricorder my-starship-tricorder-api-server
+```
+kubectl get service -n tricorder
 ```
 
-![image](./image/api-server-svc-url.jpeg)
+The service's name has Helm chart release's name as its prefix, for example, the screenshot
+below shows `my-starship-tricorder-api-server`
+
+![image](https://user-images.githubusercontent.com/112656580/215043391-6c4cd4bd-3a58-472f-a688-b88f11ef90c1.png)
 
 Navigate to `http://${EXTERNAL-IP}` in your browser, note that
-the protocol is HTTP, not HTTPS.
+the protocol is **HTTP**, not **HTTPS**.
 
 ## Access Starship Web UI with `kubectl port-forward`
 
