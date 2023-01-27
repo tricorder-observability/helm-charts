@@ -43,35 +43,6 @@ helm install my-starship tricorder-stable/starship -n tricorder
 As usual, you can override configuration values defined in `Values.yaml`
 with `--set` flags.
 
-### Override default values
-
-```shell
-# Change service type to ClusterIP
-helm upgrade my-starship tricorder-stable/starship -n tricorder \
-    --set service.type=ClusterIP
-
-# Use specified container image tag
-helm upgrade my-starship tricorder-stable/starship -n tricorder \
-    --set tag=<a specific tag>
-```
-
-## Install from local repo
-
-`git clone` this repo repo, and replace `tricorder-stable/starship` with the
-charts local path `charts/starship`.
-
-```shell
-git clone git@github.com:tricorder-observability/helm-charts.git
-cd helm-charts
-# You'll need this step to fetch the dependent charts
-helm dep update charts/starship
-helm install my-starship charts/starship -n tricorder
-```
-
-All commands listed in the previous [install](#install) section works when you
-swap `tricorder-stable/starship` with `charts/starship` when the PWD is the
-root of the repo.
-
 ## Expose Starship managenment UI with `kubectl port-forward`
 
 Starship will need the services exposed outside of the Kubernetes cluster in
@@ -230,3 +201,34 @@ kubectl delete ValidatingWebhookConfiguration my-starship-kube-prometheus-admiss
 ```shell
 kubectl delete namespace tricorder
 ```
+
+## Advanced topics
+
+### Override default values
+
+```shell
+# Change service type to ClusterIP
+helm upgrade my-starship tricorder-stable/starship -n tricorder \
+    --set service.type=ClusterIP
+
+# Use specified container image tag
+helm upgrade my-starship tricorder-stable/starship -n tricorder \
+    --set tag=<a specific tag>
+```
+
+### Install from local helm-charts repo
+
+`git clone` this repo repo, and replace `tricorder-stable/starship` with the
+charts local path `charts/starship`.
+
+```shell
+git clone git@github.com:tricorder-observability/helm-charts.git
+cd helm-charts
+# You'll need this step to fetch the dependent charts
+helm dep update charts/starship
+helm install my-starship charts/starship -n tricorder
+```
+
+All commands listed in the previous [install](#install) section works when you
+swap `tricorder-stable/starship` with `charts/starship` when the PWD is the
+root of the repo.
