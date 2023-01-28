@@ -18,7 +18,7 @@ stringData:
     apiVersion: 1
 
     datasources:
-
+# Prometheus data query protocol (aka PromQL)
 {{- if $kubePrometheus.grafana.prometheus.datasource.enabled }}
       - name: tricorder-PromQL
         type: prometheus
@@ -29,7 +29,7 @@ stringData:
         # SHA256 of datasource name cut to 40 chars as in: `sha256sum <<< Promscale-PromQL | cut -c1-40`
         uid: dc08d25c8f267b054f12002f334e6d3d32a853e4
 {{- end -}}
-
+# Jaeger (OpenTelemetry compatible) data query protocol (OTLP)
 {{- if $kubePrometheus.grafana.jaeger.datasource.enabled }}
       - name: tricorder-Tracing
         type: jaeger
@@ -40,6 +40,7 @@ stringData:
         uid: f78291126102e0f2e841734d1e90250257543042
 {{- end -}}
 
+# TimescaleDB's SQL time-series query endpoint (aka postgres endpoint)
 {{ if $kubePrometheus.grafana.timescale.datasource.enabled -}}
 {{- $isDBURI := (ne .Values.promscale.connection.uri "")}}
 {{- $hostURL := "" -}}
