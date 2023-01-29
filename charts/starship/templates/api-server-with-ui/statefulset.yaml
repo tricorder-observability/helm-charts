@@ -40,6 +40,8 @@ spec:
           - name: sqlite
             mountPath: {{ .Values.apiServer.persistentVolumes.data.mountPath | quote }}
             subPath: {{ .Values.apiServer.persistentVolumes.data.subPath | quote }}
+          # https://alesnosek.com/blog/2017/02/14/accessing-kubernetes-pods-from-outside-of-the-cluster/
+          # TODO(yaxiong): See this for reference and later refinement.
           ports:
             {{- range $key, $port := .Values.apiServer.ports }}
             {{- if $port.enabled }}
