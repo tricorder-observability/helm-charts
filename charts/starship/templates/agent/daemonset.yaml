@@ -36,10 +36,12 @@ spec:
               fieldRef:
                 fieldPath: spec.nodeName
         image: "{{ .Values.agent.image.repository }}:{{ .Values.images.tag | default .Values.agent.image.tag }}"
-        args: ["--module_deployer_address=api-server:50051"]
+        args:
+          - --module_deployer_address=api-server:50051
+          - --pg_url=postgresql://postgres:tricorder@timescaledb:5432/tricorder
         imagePullPolicy: Always
         securityContext:
-          # Required to run eBPF programs
+          # Required to deploy eBPF programs.
           privileged: true
         # TODO(yzhao): Add resources
         # resources:
