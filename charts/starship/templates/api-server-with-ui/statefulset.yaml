@@ -1,4 +1,7 @@
 apiVersion: apps/v1
+# This is for ensuring the pvc that stores sqlite DB which has the module
+# metadata.
+# TODO(yaxiong): It's not clear if this is true though. Investigate and update.
 kind: StatefulSet
 metadata:
   name: api-server
@@ -8,8 +11,6 @@ metadata:
     app.kubernetes.io/app: starship
 spec:
   serviceName: api-server
-  updateStrategy:
-    type: RollingUpdate
   replicas: 1
   selector:
     matchLabels:
@@ -23,6 +24,8 @@ spec:
       containers:
         - name: api-server
           env:
+          # This enables release mode for the GIN http framework.
+          # Otherwise, GIN runs in DEBUG mode and prints too much logs.
           - name: GIN_MODE
             value: release
           image: "{{ .Values.apiServer.image.repository }}:{{ .Values.images.tag | default .Values.apiServer.image.tag }}"
@@ -34,7 +37,7 @@ spec:
             {{- end }}
             - --grafana_url=http://{{ .Release.Name }}-grafana:80
           volumeMounts:
-          - name: tricorder-storage-volume
+          - name: sqlite
             mountPath: {{ .Values.apiServer.persistentVolumes.data.mountPath | quote }}
             subPath: {{ .Values.apiServer.persistentVolumes.data.subPath | quote }}
           ports:
@@ -43,9 +46,6 @@ spec:
             - name: {{ $key }}
               containerPort: {{ $port.containerPort }}
               protocol: {{ $port.protocol }}
-              {{- if and $.isAgent $port.hostPort }}
-              hostPort: {{ $port.hostPort }}
-              {{- end }}
             {{- end }}
             {{- end }}
           resources:
@@ -62,9 +62,6 @@ spec:
             - name: {{ $key }}
               containerPort: {{ $port.containerPort }}
               protocol: {{ $port.protocol }}
-              {{- if and $.isAgent $port.hostPort }}
-              hostPort: {{ $port.hostPort }}
-              {{- end }}
             {{- end }}
             {{- end }}
           resources:

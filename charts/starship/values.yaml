@@ -59,7 +59,7 @@ apiServer:
 
   image:
     repository: public.ecr.aws/tricorder/api-server
-    pullPolicy: Always
+    pullPolicy: IfNotPresent
 
   persistentVolumes:
     data:
@@ -86,13 +86,11 @@ apiServer:
       enabled: true
       containerPort: 8080
       servicePort: 8080
-      hostPort: 8080
       protocol: TCP
     grpc:
       enabled: true
       containerPort: 50051
       servicePort: 50051
-      hostPort: 50051
       protocol: TCP
 
   resources:
@@ -118,8 +116,6 @@ ui:
       enabled: true
       containerPort: 80
       servicePort: 80
-      # TODO: Try to remove this and see anything is borken (seems not used)
-      hostPort: 80
       protocol: TCP
   resources:
     limits:
@@ -350,7 +346,7 @@ timescaledb-single:
     image:
       repository: quay.io/prometheuscommunity/postgres-exporter
       tag: v0.11.1
-      pullPolicy: Always
+      pullPolicy: IfNotPresent
     # Extra custom environment variables for prometheus.
     # These should be an EnvVar, as this allows you to inject secrets into the environment
     # https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#envvar-v1-core
@@ -469,7 +465,7 @@ kube-prometheus-stack:
       # TODO(yzhao): Change this to inherit the tag of starship
       tag: v0.0.9
       sha: ''
-      pullPolicy: Always
+      pullPolicy: IfNotPresent
     resources:
       requests:
         cpu: 10m
