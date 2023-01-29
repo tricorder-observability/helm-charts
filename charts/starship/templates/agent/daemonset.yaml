@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: DaemonSet
 metadata:
-  name: {{ include "tricorder.fullname" . }}-tricorder-agent
+  name: tricorder-agent
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tricorder.labels" . | nindent 4 }}
+    app.kubernetes.io/name: tricorder-agent
 spec:
   selector:
     matchLabels:
-      {{- include "tricorder.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/name: tricorder-agent
   template:
     metadata:
       labels:
-        {{- include "tricorder.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/name: tricorder-agent
     spec:
       # Required to get consistent and universal PIDs on the host environment
       hostPID: true
@@ -28,7 +28,7 @@ spec:
           path: /sys
           type: Directory
       containers:
-      - name: {{ .Chart.Name }}-tricorder-agent
+      - name: agent
         env:
           # Inject outer-scope hostname into container, so the agent can use
           # this to filter out updates not relevant to this node from
@@ -38,14 +38,16 @@ spec:
               fieldRef:
                 fieldPath: spec.nodeName
         image: "{{ .Values.agent.image.repository }}:{{ .Values.images.tag | default .Values.agent.image.tag }}"
-        args: ["--module_deployer_address={{ include "tricorder.fullname" . }}-tricorder-api-server:50051"]
+        args: ["--module_deployer_address=api-server:50051"]
         imagePullPolicy: Always
         securityContext:
           # Required to run eBPF programs
           privileged: true
+        # TODO(yzhao): Add resources
+        # resources:
         volumeMounts:
         - name: sys
-          mountPath: /sys
+          mountPath: /host/sys
           readOnly: true
         - name: lib-modules
           mountPath: /lib/modules

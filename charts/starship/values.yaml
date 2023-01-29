@@ -24,9 +24,6 @@ affinity: {}
 
 podAnnotations: {}
 
-podSecurityContext: {}
-  # fsGroup: 2000
-
 securityContext: {}
   # capabilities:
   #   drop:
@@ -34,13 +31,6 @@ securityContext: {}
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
   # runAsUser: 1000
-
-autoscaling:
-  enabled: false
-  minReplicas: 1
-  maxReplicas: 100
-  targetCPUUtilizationPercentage: 80
-  # targetMemoryUtilizationPercentage: 80
 
 ingress:
   enabled: false
@@ -80,12 +70,10 @@ apiServer:
       ## If undefined (the default) or set to null, no storageClassName spec is
       ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
       ##   GKE, AWS & OpenStack)
-      ##
       storageClass:
       size: 200Mi
       subPath: "tricorder.db"
       mountPath: "/tricorder/"
-      annotations: {}
       accessModes:
         - ReadWriteOnce
   command:
@@ -597,7 +585,7 @@ kube-prometheus-stack:
         volumeClaimTemplate:
           spec:
             accessModes:
-              - "ReadWriteOnce"
+              - ReadWriteOnce
             resources:
               requests:
                 storage: 1Gi
