@@ -51,7 +51,7 @@ stringData:
   {{- $port := $kubePrometheus.grafana.timescale.datasource.port | int -}}
   {{- $hostURL = printf "%s:%d" $host $port -}}
 {{ end }}
-      - name: tricorder-SQL
+      - name: promscale
         url: {{ $hostURL }}
         type: postgres
         isDefault: {{ not $kubePrometheus.grafana.prometheus.datasource.enabled }}
