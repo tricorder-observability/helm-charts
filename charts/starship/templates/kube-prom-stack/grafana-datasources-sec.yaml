@@ -1,6 +1,6 @@
 {{- $kubePrometheus := index .Values "kube-prometheus-stack" -}}
-{{ if and $kubePrometheus.grafana.enabled $kubePrometheus.grafana.sidecar.datasources.enabled -}}
-{{ if or $kubePrometheus.grafana.timescale.datasource.enabled $kubePrometheus.grafana.prometheus.datasource.enabled -}}
+{{- if and $kubePrometheus.grafana.enabled $kubePrometheus.grafana.sidecar.datasources.enabled -}}
+{{- if or $kubePrometheus.grafana.timescale.datasource.enabled $kubePrometheus.grafana.prometheus.datasource.enabled -}}
 apiVersion: v1
 kind: Secret
 metadata:
