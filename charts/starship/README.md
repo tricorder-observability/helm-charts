@@ -37,3 +37,9 @@ TODO: Rename to datasource or something relevant
 * `connection-secret-job.yaml` Store credentials into K8s secret, for PromScale to connect to TimescaleDB.
 * `grafana-dashboards-conf.yaml` Stores configurations of the pre-built dashboards.
 * `grafana-datasources-sec.yaml` Stores configurations of prom, otel, and timescale time-series database query endpoints and credentials.
+
+### Tricorder Database Initialization
+
+* `post-init-configmap.yaml` Create Kuternetes ConfigMap that stores the content of scripts for initializing
+  Timescale DB (aka Postgres + Timescale extensions).
+* `timescaledb-extensions.yaml` Create TimescaleDB extensions for Porm and OTel
