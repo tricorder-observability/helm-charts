@@ -12,7 +12,7 @@ maintainers:
   - name: yaxiong-zhao
 
 # Chart version, updating this version requires a release.
-version: 0.0.33
+version: 0.0.34
 
 # Use this as the tag of the images.
 appVersion: "b04c8f79aa7016e85989a93f2a9ec1fa440e311e_main"
