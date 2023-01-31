@@ -21,7 +21,7 @@ stringData:
 {{- if $kubePrometheus.grafana.prometheus.datasource.enabled }}
       - name: promescale
         # Prometheus data query protocol (aka PromQL)
-        type: prometheus
+        type: prometheus-PromQL
         url: {{ tpl $kubePrometheus.grafana.prometheus.datasource.url . }}
         isDefault: true
         editable: true
@@ -30,7 +30,7 @@ stringData:
         uid: dc08d25c8f267b054f12002f334e6d3d32a853e4
 {{- end -}}
 {{- if $kubePrometheus.grafana.jaeger.datasource.enabled }}
-      - name: promescale
+      - name: promescale-Jaeger
         # Jaeger (OpenTelemetry compatible) data query protocol (OTLP)
         type: jaeger
         url: {{ tpl $kubePrometheus.grafana.jaeger.tricorderTracesQueryEndPoint . }}
