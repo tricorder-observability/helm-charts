@@ -1,4 +1,3 @@
-# kube-prometheus-stack section in the values.yaml
 {{- $kubePrometheus := index .Values "kube-prometheus-stack" -}}
 {{ if and $kubePrometheus.enabled $kubePrometheus.grafana.enabled $kubePrometheus.grafana.sidecar.dashboards.enabled -}}
 apiVersion: v1
