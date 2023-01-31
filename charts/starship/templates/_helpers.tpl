@@ -26,31 +26,6 @@ If release name contains chart name it will be used as a full name.
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
-{{/* Common labels */}}
-{{- define "tricorder.labels" -}}
-helm.sh/chart: {{ include "tricorder.chart" . }}
-{{ include "tricorder.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/* Selector labels */}}
-{{- define "tricorder.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "tricorder.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-
-{{/* Allow the release namespace to be overridden */}}
-{{- define "tricorder.namespace" -}}
-  {{- if .Values.namespaceOverride -}}
-    {{- .Values.namespaceOverride -}}
-  {{- else -}}
-    {{- .Release.Namespace -}}
-  {{- end -}}
-{{- end -}}
-
 {{/* Extract the password from db uri */}}
 {{- define "tricorder.dburi.password" -}}
   {{- $values := urlParse .Values.promscale.connection.uri }}
@@ -98,15 +73,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
   {{- $dbName := trimPrefix "/" $dbDetails }}
   {{- printf $dbName -}}
 {{- end -}}
-
-{{/* Create the name of the service account to use */}}
-{{- define "tricorder.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "tricorder.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "starship" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}
 
 {{/* Build the list of port for deployment service */}}
 {{- define "tricorder.apiServer.svc.ports" -}}
