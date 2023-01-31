@@ -529,7 +529,7 @@ kube-prometheus-stack:
       tricorderTracesQueryEndPoint: "{{ .Release.Name }}-promscale.{{ .Release.Namespace }}.svc:9201"
 
     additionalDataSources:
-      - name: TimescaleDB-Tricorder
+      - name: timescale-tricorder
         uid: timescaledb_tricorder
         access: proxy
         editable: false
