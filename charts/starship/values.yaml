@@ -556,8 +556,8 @@ kube-prometheus-stack:
       scrapeInterval: "1m"
       evaluationInterval: "1m"
       replicas: 2
-      retention: 12h
-      retentionSize: 512MB
+      retention: 1h
+      retentionSize: 128MB
       replicaExternalLabelName: "__replica__"
       # Promscale requires a cluster label to be present for high availability mode.
       prometheusExternalLabelName: "cluster"
@@ -584,7 +584,7 @@ kube-prometheus-stack:
               - ReadWriteOnce
             resources:
               requests:
-                storage: 5Gi
+                storage: 1Gi
       resources:
         requests:
           cpu: 100m
