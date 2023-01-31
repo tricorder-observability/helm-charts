@@ -586,7 +586,7 @@ kube-prometheus-stack:
               - ReadWriteOnce
             resources:
               requests:
-                storage: 1Gi
+                storage: 5Gi
       resources:
         requests:
           cpu: 100m
