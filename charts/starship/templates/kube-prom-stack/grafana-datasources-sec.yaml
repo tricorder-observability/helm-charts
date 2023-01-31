@@ -1,3 +1,4 @@
+# kube-prometheus-stack section in the values.yaml
 {{- $kubePrometheus := index .Values "kube-prometheus-stack" -}}
 {{ if and $kubePrometheus.grafana.enabled $kubePrometheus.grafana.sidecar.datasources.enabled -}}
 {{ if or $kubePrometheus.grafana.timescale.datasource.enabled $kubePrometheus.grafana.prometheus.datasource.enabled -}}
@@ -20,7 +21,7 @@ stringData:
     datasources:
 # Prometheus data query protocol (aka PromQL)
 {{- if $kubePrometheus.grafana.prometheus.datasource.enabled }}
-      - name: tricorder-PromQL
+      - name: promescale
         type: prometheus
         url: {{ tpl $kubePrometheus.grafana.prometheus.datasource.url . }}
         isDefault: true
@@ -31,7 +32,7 @@ stringData:
 {{- end -}}
 # Jaeger (OpenTelemetry compatible) data query protocol (OTLP)
 {{- if $kubePrometheus.grafana.jaeger.datasource.enabled }}
-      - name: tricorder-Tracing
+      - name: promescale
         type: jaeger
         url: {{ tpl $kubePrometheus.grafana.jaeger.tricorderTracesQueryEndPoint . }}
         editable: true
@@ -51,7 +52,7 @@ stringData:
   {{- $port := $kubePrometheus.grafana.timescale.datasource.port | int -}}
   {{- $hostURL = printf "%s:%d" $host $port -}}
 {{ end }}
-      - name: tricorder-SQL
+      - name: timescale-postgres
         url: {{ $hostURL }}
         type: postgres
         isDefault: {{ not $kubePrometheus.grafana.prometheus.datasource.enabled }}
