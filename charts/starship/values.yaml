@@ -79,6 +79,8 @@ apiServer:
   command:
     extraArgs:
       - --module_db_dir_path=/tricorder/
+      # PG username and password setting is on the below 'timescale.database.username' && 'timescale.database.password'
+      # Database name setting is in templates/tricorder-data-int/post-init-configmap.yaml
       - --pg_url=postgresql://postgres:tricorder@timescaledb:5432/tricorder
 
   ports:
