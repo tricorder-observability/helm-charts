@@ -1,80 +1,58 @@
 apiVersion: apps/v1
+# This is for ensuring the pvc that stores sqlite DB which has the module
+# metadata.
+# TODO(yaxiong): It's not clear if this is true though. Investigate and update.
 kind: StatefulSet
 metadata:
-  name: {{ include "tricorder.fullname" . }}-startship
+  name: api-server
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "tricorder.labels" . | nindent 4 }}
+    app.kubernetes.io/name: api-server
+    app.kubernetes.io/app: starship
 spec:
-  serviceName: {{ include "tricorder.fullname" . }}-startship
-  updateStrategy:
-    type: RollingUpdate
-  {{- if not .Values.autoscaling.enabled }}
-  #replicas: {{ .Values.replicaCount }}
+  serviceName: api-server
   replicas: 1
-  {{- end }}
   selector:
     matchLabels:
-      {{- include "tricorder.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/name: api-server
   template:
     metadata:
-      {{- with .Values.apiServer.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
-        {{- include "tricorder.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/name: api-server
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      serviceAccountName: {{ include "tricorder.serviceAccountName" . }}
-      securityContext:
-        {{- toYaml .Values.apiServer.podSecurityContext | nindent 8 }}
+      serviceAccountName: api-server
       containers:
-        - name: {{ include "tricorder.fullname" . }}-api-server
-          securityContext:
-            {{- toYaml .Values.apiServer.securityContext | nindent 12 }}
+        - name: api-server
           env:
+          # This enables release mode for the GIN http framework.
+          # Otherwise, GIN runs in DEBUG mode and prints too much logs.
           - name: GIN_MODE
             value: release
           image: "{{ .Values.apiServer.image.repository }}:{{ .Values.images.tag | default .Values.apiServer.image.tag }}"
           imagePullPolicy: {{ .Values.apiServer.image.pullPolicy }}
           args:
+            # TODO(yaxiong): Consider move the args defined in values.yaml into here directly.
             {{- range .Values.apiServer.command.extraArgs }}
             - {{ . }}
             {{- end }}
             - --grafana_url=http://{{ .Release.Name }}-grafana:80
           volumeMounts:
-          - name: tricorder-storage-volume
+          - name: sqlite
             mountPath: {{ .Values.apiServer.persistentVolumes.data.mountPath | quote }}
             subPath: {{ .Values.apiServer.persistentVolumes.data.subPath | quote }}
+          # https://alesnosek.com/blog/2017/02/14/accessing-kubernetes-pods-from-outside-of-the-cluster/
+          # TODO(yaxiong): See this for reference and later refinement.
           ports:
             {{- range $key, $port := .Values.apiServer.ports }}
             {{- if $port.enabled }}
             - name: {{ $key }}
               containerPort: {{ $port.containerPort }}
               protocol: {{ $port.protocol }}
-              {{- if and $.isAgent $port.hostPort }}
-              hostPort: {{ $port.hostPort }}
-              {{- end }}
             {{- end }}
             {{- end }}
-          # TODO(jian)
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
           resources:
             {{- toYaml .Values.apiServer.resources | nindent 12 }}
-        - name: {{ include "tricorder.fullname" . }}-mgmt-ui
-          securityContext:
-            {{- toYaml .Values.ui.securityContext | nindent 12 }}
+        - name: mgmt-ui
           image: "{{ .Values.ui.image.repository }}:{{ .Values.images.tag | default .Values.ui.image.tag }}"
           imagePullPolicy: {{ .Values.ui.image.pullPolicy }}
           env:
@@ -86,61 +64,21 @@ spec:
             - name: {{ $key }}
               containerPort: {{ $port.containerPort }}
               protocol: {{ $port.protocol }}
-              {{- if and $.isAgent $port.hostPort }}
-              hostPort: {{ $port.hostPort }}
-              {{- end }}
             {{- end }}
             {{- end }}
-          # TODO(jian):
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
           resources:
             {{- toYaml .Values.ui.resources | nindent 12 }}
-
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       volumes:
-      {{- if not .Values.apiServer.persistentVolumes.data.enabled }}
       - name: tricorder-storage-volume
         emptyDir: {}
-      {{- end }}
   volumeClaimTemplates:
-  {{- if .Values.apiServer.persistentVolumes.data.enabled }}
     - metadata:
         name: tricorder-storage-volume
-        annotations:
-        {{- if .Values.apiServer.persistentVolumes.data.annotations }}
-          {{ toYaml .Values.apiServer.persistentVolumes.data.annotations | nindent 10 }}
-        {{- end }}
         labels:
-          {{- include "tricorder.selectorLabels" . | nindent 10 }}
+          app.kubernetes.io/app: starship
       spec:
         accessModes:
           {{ toYaml .Values.apiServer.persistentVolumes.data.accessModes | nindent 8 }}
         resources:
           requests:
             storage: "{{ .Values.apiServer.persistentVolumes.data.size }}"
-      {{- if .Values.apiServer.persistentVolumes.data.storageClass }}
-      {{- if (eq "-" .Values.apiServer.persistentVolumes.data.storageClass) }}
-        storageClassName: ""
-      {{- else }}
-        storageClassName: "{{ .Values.apiServer.persistentVolumes.data.storageClass }}"
-      {{- end }}
-      {{- end }}
-  {{- end }}
