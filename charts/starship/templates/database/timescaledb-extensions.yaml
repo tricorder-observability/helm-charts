@@ -1,8 +1,5 @@
 {{- $tsdb := index .Values "timescaledb-single" -}}
 {{ if $tsdb.enabled -}}
-{{- /*
-FIXME(paulfantom): Remove this ConfigMap when timescaleDB images start to be published with toolkit pre-enabled
-*/}}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -13,7 +10,7 @@ metadata:
     "helm.sh/hook-weight": "0"
     "helm.sh/resource-policy": keep
   labels:
-    app: {{ template "tricorder.fullname" . }}
+    app: starship
     chart: {{ template "tricorder.chart" . }}
     release: {{ .Release.Name }}
 data:
