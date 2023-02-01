@@ -6,21 +6,19 @@
 # You can disable line with:              #
 # # yamllint disable-line                 #
 ###########################################
-ignore:
-  - charts/starship/templates
 rules:
   braces:
     level: warning
     min-spaces-inside: 0
     max-spaces-inside: 0
-    min-spaces-inside-empty: 1
-    max-spaces-inside-empty: 5
+    min-spaces-inside-empty: 0
+    max-spaces-inside-empty: 0
   brackets:
     level: warning
     min-spaces-inside: 0
     max-spaces-inside: 0
-    min-spaces-inside-empty: 1
-    max-spaces-inside-empty: 5
+    min-spaces-inside-empty: 0
+    max-spaces-inside-empty: 0
   colons:
     level: warning
     max-spaces-before: 0
@@ -52,7 +50,7 @@ rules:
   key-duplicates: enable
   line-length:
     level: warning
-    max: 80
+    max: 120
     allow-non-breakable-words: true
     allow-non-breakable-inline-mappings: true
   new-line-at-end-of-file: disable

@@ -1,17 +1,20 @@
 # Starship Helm charts
 
-This repository contains Helm charts for deploying [Tricorder Observability](https://tricorder.dev)'s
-Starship Observability platform.
+This repository contains Helm charts for deploying [Tricorder
+Observability](https://tricorder.dev)'s Starship Observability platform.
 
-Starship currently only runs on Kubernetes. Starship provides eBPF-powered instrumentation-free Service Map.
-Where you don't need to change a single line of code in your application. Instantly access a single-pane view of
-the high-level status of your Cloud Native applications.
+Starship currently only runs on Kubernetes. Starship provides eBPF-powered
+instrumentation-free Service Map.  Where you don't need to change a single line
+of code in your application. Instantly access a single-pane view of the
+high-level status of your Cloud Native applications.
 
-Starship also collects [Prometheus](https://prometheus.io/) and [OpenTelemetry](https://opentelemetry.io/).
+Starship also collects [Prometheus](https://prometheus.io/) and
+[OpenTelemetry](https://opentelemetry.io/).
 
-Starship currently uses [Grafana](https://github.com/grafana/grafana) for data visualization.
+Starship uses [Grafana](https://github.com/grafana/grafana) for visualization.
 
-**WARNING:** This project is currently in active development. Consider this a technical preview only.
+**WARNING:** This project is currently in active development. Consider this a
+technical preview only.
 
 ## Prerequisites
 
@@ -49,7 +52,7 @@ If your cluster has configured LoadBalancer that supports external access,
 like AWS LoadBalancer Controller or an Ingress Controller, you can access the service
 directly through `api-server` service's `ExteranIP`:
 
-```
+```shell
 kubectl get service -n tricorder
 ```
 
