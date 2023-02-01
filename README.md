@@ -47,8 +47,6 @@ kubectl create namespace tricorder
 helm install my-starship tricorder-stable/starship -n tricorder
 ```
 
-**Optional:** [Send OpenTelemetry data to Starship](./docs/send-otlp-data-to-starship.md).
-
 ## Access Starship web UI with through LoadBalancer external IP
 
 Starship by default expose web UI service through `LoadBalancer` service.
@@ -212,6 +210,10 @@ kubectl delete namespace tricorder
 ```
 
 ## Advanced topics
+
+### Send OpenTelemetry data to Starship
+
+[Send OpenTelemetry data to Starship](./docs/send-otlp-data-to-starship.md).
 
 ### Override default values
 
