@@ -13,6 +13,9 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: Write github env
+        # Consistent with starship repo
+        run: cat .github/super-linter.env >> "$GITHUB_ENV"
       - name: Lint Code Base
         # https://github.com/github/super-linter#slim-image
         # Linters missing from slim image are not useful for Tricorder codebase
