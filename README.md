@@ -29,7 +29,7 @@ TODO: Add instructions for other public Clouds.
 
 ### AWS EKS
 
-- If you are using AWS EKS, isntall
+- If you are using AWS EKS, install
   [EBS CSI](https://docs.aws.amazon.com/eks/latest/userguide/ebs-csi.html)
   on your EKS cluster. This is required because Helm charts create
   [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)

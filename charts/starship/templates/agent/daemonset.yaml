@@ -14,6 +14,8 @@ spec:
     spec:
       # Required to get consistent and universal PIDs on the host environment
       hostPID: true
+      # Required when hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
       # Required to get consistent and universal networking metadata on the
       # host environment
       hostNetwork: true
