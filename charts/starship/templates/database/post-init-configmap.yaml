@@ -8,7 +8,7 @@ metadata:
     "helm.sh/hook-weight": "0"
     "helm.sh/resource-policy": keep
   labels:
-    app: {{ template "tricorder.fullname" . }}
+    app: starship
     chart: {{ template "tricorder.chart" . }}
     release: {{ .Release.Name }}
 data:

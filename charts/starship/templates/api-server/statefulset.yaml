@@ -37,7 +37,7 @@ spec:
             {{- end }}
             - --grafana_url=http://{{ .Release.Name }}-grafana:80
           volumeMounts:
-          - name: sqlite
+          - name: tricorder-storage-volume
             mountPath: {{ .Values.apiServer.persistentVolumes.data.mountPath | quote }}
             subPath: {{ .Values.apiServer.persistentVolumes.data.subPath | quote }}
           # https://alesnosek.com/blog/2017/02/14/accessing-kubernetes-pods-from-outside-of-the-cluster/
