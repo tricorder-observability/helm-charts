@@ -557,7 +557,7 @@ kube-prometheus-stack:
     prometheusSpec:
       scrapeInterval: "1m"
       evaluationInterval: "1m"
-      replicas: 2
+      replicas: 1
       retention: 1h
       retentionSize: 128MB
       replicaExternalLabelName: "__replica__"
