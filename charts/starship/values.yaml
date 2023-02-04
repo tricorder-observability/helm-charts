@@ -499,6 +499,7 @@ kube-prometheus-stack:
           - dashboards/postgres-overview.json
           - dashboards/postgres-details.json
           - dashboards/demo-ebpf-http.json
+          - dashboards/metadata-process.json
     persistence:
       type: pvc
       enabled: true
