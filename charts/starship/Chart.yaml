@@ -14,8 +14,8 @@ maintainers:
 # Chart version, updating this version requires a release.
 version: 0.0.37
 
-# Use this as the tag of the images.
-appVersion: "b04c8f79aa7016e85989a93f2a9ec1fa440e311e_main"
+# Same as version
+appVersion: 0.0.37
 
 dependencies:
   - name: timescaledb-single
