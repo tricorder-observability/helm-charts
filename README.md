@@ -75,7 +75,7 @@ note that the protocol is **HTTP**, not **HTTPS**.
 
 You can expose the services to your local network using the `kubectl port-forward` command.
 Use the following command to expose the Starship managenment UI service on port
-18080 on localhost: `**http**://localhost:18080`.
+18080 on localhost: `http://localhost:18080`.
 
 ```shell
 kubectl -n tricorder port-forward service/api-server 18080:80
