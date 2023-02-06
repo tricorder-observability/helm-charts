@@ -229,7 +229,7 @@ helm upgrade my-starship tricorder-stable/starship -n tricorder \
 
 ### Install from local helm-charts repo
 
-`git clone` this repo repo, and replace `tricorder-stable/starship` with the
+`git clone` this repo, and replace `tricorder-stable/starship` with the
 charts local path `charts/starship`.
 
 ```shell
