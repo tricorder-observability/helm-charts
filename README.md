@@ -8,14 +8,22 @@ Helm charts for deploying Starship Observability platform,
 [Tricorder Observability](https://tricorder.dev)'s next-generation Observability platform.
 
 Starship currently only runs on Kubernetes. Starship provides eBPF-powered
-instrumentation-free Service Map.  Where you don't need to change a single line
-of code in your application. Instantly access a single-pane view of the
-high-level status of your Cloud Native applications.
+instrumentation-free Service Map.  No need to change a single line
+of code in your application, instantly access a single-pane view of the
+high-level status of your Cloud Native applications on Kubernetes.
 
-Starship also collects [Prometheus](https://prometheus.io/) and
+Starship also collects data from [Prometheus](https://prometheus.io/) and
 [OpenTelemetry](https://opentelemetry.io/).
 
 Starship uses [Grafana](https://github.com/grafana/grafana) for visualization.
+
+## Caveats
+
+**WARNING** Do not install multiple Starship releases in multiple namespaces.
+That won't work because of system limitations. If you accidentally did that,
+follow the [uninstall](#uninstall) instructions to remove all artifacts and reinstall.
+
+**WARNING** Do not install multiple releases in the same namespace.
 
 **WARNING:** This project is currently in active development. Consider this a
 technical preview only.
@@ -47,7 +55,7 @@ kubectl create namespace tricorder
 helm install my-starship tricorder-stable/starship -n tricorder
 ```
 
-## Access Starship web UI with through LoadBalancer external IP
+## Access Starship web UI through LoadBalancer external IP
 
 Starship by default expose web UI service through `LoadBalancer` service.
 If your cluster has configured LoadBalancer that supports external access,
@@ -58,33 +66,20 @@ directly through `api-server` service's `ExteranIP`:
 kubectl get service -n tricorder
 ```
 
-The service's name has Helm chart release's name as its prefix, for example, the screenshot
-below shows `my-starship-tricorder-api-server`
-
 ![image](https://user-images.githubusercontent.com/112656580/215043391-6c4cd4bd-3a58-472f-a688-b88f11ef90c1.png)
 
-Navigate to `http://${EXTERNAL-IP}` in your browser, note that
-the protocol is **HTTP**, not **HTTPS**.
+Navigate to `http://${EXTERNAL-IP}` in your browser to access Starship's Web UI,
+note that the protocol is **HTTP**, not **HTTPS**.
 
-## Access Starship Web UI with `kubectl port-forward`
+## Access Starship Web UI through `kubectl port-forward`
 
-Starship will need the services exposed outside of the Kubernetes cluster in
-order to use them. You can expose the services to your local system using the
-`kubectl port-forward` command or by configuring service types (ie:
-LoadBalancer) with optionally deployed ingress resources.
-
-To expose the Starship managenment UI service use the following command (replace
-`my-starship-api-server` and `-n tricorder` with your Helm chart release name
-accordingly):
+You can expose the services to your local network using the `kubectl port-forward` command.
+Use the following command to expose the Starship managenment UI service on port
+18080 on localhost: `**http**://localhost:18080`.
 
 ```shell
-kubectl -n tricorder port-forward service/my-starship-api-server 18080:80
+kubectl -n tricorder port-forward service/api-server 18080:80
 ```
-
-With the Starship managenment UI set up, you can access:
-
-Starship managenment UI: <http://localhost:18080/>
-
 
 ## Data Retention
 
@@ -246,12 +241,3 @@ helm install my-starship charts/starship -n tricorder
 All commands listed in the previous [install](#install) section works when you
 swap `tricorder-stable/starship` with `charts/starship` when the PWD is the
 root of the repo.
-
-### Caveats
-
-**WARNING** Do not install Starship simultaneously into multiple namespaces.
-That won't work because of system limitations.
-If you accidentally did that, follow the [uninstall](#uninstall) instructions
-to remove all artifacts and reinstall.
-
-**WARNING** Do not install multiple releases in the same namespace.
