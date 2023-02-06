@@ -4,8 +4,8 @@
 [![Lint Charts](https://github.com/tricorder-observability/helm-charts/actions/workflows/lint-chart.yaml/badge.svg?event=pull_request)](https://github.com/tricorder-observability/helm-charts/actions/workflows/lint-chart.yaml)
 [![Lint Code Base](https://github.com/tricorder-observability/helm-charts/actions/workflows/super-linter.yaml/badge.svg?event=pull_request)](https://github.com/tricorder-observability/helm-charts/actions/workflows/super-linter.yaml)
 
-This repository contains Helm charts for deploying [Tricorder
-Observability](https://tricorder.dev)'s Starship Observability platform.
+Helm charts for deploying Starship Observability platform,
+[Tricorder Observability](https://tricorder.dev)'s next-generation Observability platform.
 
 Starship currently only runs on Kubernetes. Starship provides eBPF-powered
 instrumentation-free Service Map.  Where you don't need to change a single line
