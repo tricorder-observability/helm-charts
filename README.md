@@ -18,6 +18,11 @@ Starship also collects data from [Prometheus](https://prometheus.io/) and
 [OpenTelemetry](https://opentelemetry.io/).
 
 Starship uses [Grafana](https://github.com/grafana/grafana) for visualization.
+Use the following info to logon Grafana:
+```
+username: admin
+password: tricorder
+```
 
 ## Caveats
 
@@ -71,7 +76,8 @@ kubectl get service -n tricorder
 ![image](https://user-images.githubusercontent.com/112656580/215043391-6c4cd4bd-3a58-472f-a688-b88f11ef90c1.png)
 
 Navigate to `http://${EXTERNAL-IP}` in your browser to access Starship's Web UI,
-note that the protocol is **HTTP**, not **HTTPS**.
+note that the protocol is **HTTP**, not **HTTPS**. You will be able to open Grafana instance
+by following the link on the left panel of the management Web UI.
 
 ## Access Starship Web UI through `kubectl port-forward`
 
