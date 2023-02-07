@@ -2,14 +2,18 @@
 
 本仓库是用于部署星舰（Starship）可观测平台的Helm charts，
 星舰可观测性是[三度观测云](https://tricorder.dev)开发的下一代可观测性平台。
-目前，Starship仅支持 Kubernetes 平台上运行。
+目前，Starship 仅支持 Kubernetes 平台上运行。
 
-Starship基于eBPF技术，无需更改应用程序代码，即可立即获取云原生应用的服务运行拓
+Starship 基于 eBPF 技术，无需更改应用程序代码，即可立即获取云原生应用的服务运行拓
 扑图（Service Map）。
 
-Starship也支持收集Prometheus和OpenTelemetry的数据。
+Starship 也支持收集 Prometheus、OpenTelemetry 数据。
 
-Starship使用Grafana对收集的数据进行可视化。
+Starship 使用 Grafana 对收集的数据进行可视化，使用下面的用户名、密码访问：
+```
+username: admin
+password: tricorder
+```
 
 **注意** 本项目正在积极开发中，当前版本为技术预览版。
 **警告** 不要同时在多个名字空间安装星舰可观测性平台；如果你不小心在多个名字空间
