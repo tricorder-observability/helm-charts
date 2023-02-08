@@ -14,8 +14,6 @@ spec:
     spec:
       # Required to get consistent and universal PIDs on the host environment
       hostPID: true
-      # Required when hostNetwork is true
-      dnsPolicy: ClusterFirstWithHostNet
       # Required to get consistent and universal networking metadata on the
       # host environment
       hostNetwork: true
@@ -24,6 +22,11 @@ spec:
         hostPath:
           # Required by BCC to access installed kernel headers
           path: /lib/modules
+          type: Directory
+      - name: usr-src
+        hostPath:
+          # /lib/modules/build symlinks to subdirs under /usr/src
+          path: /usr/src
           type: Directory
       - name: sys
         hostPath:
@@ -54,6 +57,6 @@ spec:
         - name: sys
           mountPath: /host/sys
           readOnly: true
-        - name: lib-modules
-          mountPath: /lib/modules
+        - name: usr-src
+          mountPath: /usr/src
           readOnly: true
