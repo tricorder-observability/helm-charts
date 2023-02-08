@@ -63,6 +63,33 @@ kubectl -n tricorder port-forward service/my-starship-api-server
 18080:80
 ```
 
+## 使用 Ingress 转发访问Starship 管理界面
+
+Ingress 用于公开从集群外部到集群内服务的 HTTP 和 HTTPS 路由。 使用以下命令创建 Ingress 规则使用 `starship.io` 作为 host，`80` 作为端口访问 Starship。
+```shell
+kubectl apply -f - <<EOF                                                                                                                                                                                                                                                                                            
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tricorder
+  namespace: tricorder
+spec:
+  rules:
+  - host: starship.io
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: api-server
+            port:
+              number: 80
+EOF
+```
+
+如果你想使用更多的 Ingress 功能，比如 TLS 访问， 请根据 Ingress [文档](https://kubernetes.io/zh-cn/docs/concepts/services-networking/ingress/) 来编写对应的配置。
+
 ## 配置数据留存时间
 
 指标和跟踪数据会被保留一段时间，然后被自动丢弃；默认数据保留周期为7天。

@@ -89,6 +89,34 @@ Use the following command to expose the Starship managenment UI service on port
 kubectl -n tricorder port-forward service/api-server 18080:80
 ```
 
+## Access Starship Web UI through Ingress
+
+Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. Use the following command to expose the Starship managenment UI service as `tstarship.io` host on ingress port 80.
+
+```shell
+kubectl apply -f - <<EOF                                                                                                                                                                                                                                                                                            
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tricorder
+  namespace: tricorder
+spec:
+  rules:
+  - host: starship.io
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: api-server
+            port:
+              number: 80
+EOF
+
+```
+If you want to use more ingress features, such as TLS termination, please follow this (documentation)[https://kubernetes.io/docs/concepts/services-networking/ingress/] to write ingress configuration.
+
 ## Data Retention
 
 Metric and Trace data has an automated retention that drops data after a certain
