@@ -28,7 +28,9 @@ spec:
           # Otherwise, GIN runs in DEBUG mode and prints too much logs.
           - name: GIN_MODE
             value: release
-          image: "{{ .Values.apiServer.image.repository }}:{{ .Values.apiServer.image.tag | .Chart.AppVersion }}"
+          # keep default function here, because .Chart.AppVersion cannot be invoked as function
+          # https://helm.sh/docs/chart_template_guide/functions_and_pipelines/#using-the-default-function
+          image: "{{ .Values.apiServer.image.repository }}:{{ .Values.apiServer.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.apiServer.image.pullPolicy }}
           args:
             # TODO(yaxiong): Consider move the args defined in values.yaml into here directly.
@@ -53,7 +55,9 @@ spec:
           resources:
             {{- toYaml .Values.apiServer.resources | nindent 12 }}
         - name: mgmt-ui
-          image: "{{ .Values.ui.image.repository }}:{{ .Values.ui.image.tag | .Chart.AppVersion }}"
+          # keep default function here, because .Chart.AppVersion cannot be invoked as function 
+          # https://helm.sh/docs/chart_template_guide/functions_and_pipelines/#using-the-default-function
+          image: "{{ .Values.ui.image.repository }}:{{ .Values.ui.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.ui.image.pullPolicy }}
           env:
           - name: HELM_RELEASE_NAME
