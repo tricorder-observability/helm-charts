@@ -45,6 +45,7 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: spec.nodeName
+        # keep default function here, because .Chart.AppVersion cannot be invoked as function
         image: "{{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag | default .Chart.AppVersion }}"
         args:
           - --module_deployer_address=api-server:50051
