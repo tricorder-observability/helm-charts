@@ -6,9 +6,6 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-images:
-  tag: "1bad3b4858fb1406823f970214538ab1afab7fb3_main"
-
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
@@ -60,6 +57,8 @@ apiServer:
   image:
     repository: public.ecr.aws/tricorder/api-server
     pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
 
   persistentVolumes:
     data:
@@ -107,11 +106,15 @@ agent:
   image:
     repository: public.ecr.aws/tricorder/agent
     pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
 
 ui:
   image:
     repository: public.ecr.aws/tricorder/mgmt-ui
     pullPolicy: IfNotPresent
+    # Overrides the image tag whose default is the chart appVersion.
+    tag: ""
 
   ports:
     uihttp:
