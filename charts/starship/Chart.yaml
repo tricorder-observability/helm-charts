@@ -15,7 +15,7 @@ maintainers:
 version: 0.0.40
 
 # starship image tag
-appVersion: 9cf78be185160355d18aff47aed13d280b30e0c5_main
+appVersion: 38ac646116e3a1a97a8e18a55346e83e210d34a8_main
 
 dependencies:
   - name: timescaledb-single
