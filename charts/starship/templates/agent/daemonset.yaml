@@ -17,6 +17,8 @@ spec:
       # Required to get consistent and universal networking metadata on the
       # host environment
       hostNetwork: true
+      # Required when hostNetwork is true
+      dnsPolicy: ClusterFirstWithHostNet
       volumes:
       - name: lib-modules
         hostPath:
