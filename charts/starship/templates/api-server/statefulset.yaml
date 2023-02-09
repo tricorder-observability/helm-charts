@@ -29,6 +29,7 @@ spec:
           - name: GIN_MODE
             value: release
           # keep default function here, because .Chart.AppVersion cannot be invoked as function
+          # https://helm.sh/docs/chart_template_guide/functions_and_pipelines/#using-the-default-function
           image: "{{ .Values.apiServer.image.repository }}:{{ .Values.apiServer.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.apiServer.image.pullPolicy }}
           args:
@@ -55,6 +56,7 @@ spec:
             {{- toYaml .Values.apiServer.resources | nindent 12 }}
         - name: mgmt-ui
           # keep default function here, because .Chart.AppVersion cannot be invoked as function 
+          # https://helm.sh/docs/chart_template_guide/functions_and_pipelines/#using-the-default-function
           image: "{{ .Values.ui.image.repository }}:{{ .Values.ui.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.ui.image.pullPolicy }}
           env:
