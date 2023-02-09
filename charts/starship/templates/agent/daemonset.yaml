@@ -45,7 +45,7 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: spec.nodeName
-        image: "{{ .Values.agent.image.repository }}:{{ .Values.images.tag | default .Values.agent.image.tag }}"
+        image: "{{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag | .Chart.AppVersion }}"
         args:
           - --module_deployer_address=api-server:50051
           - --pg_url=postgresql://postgres:tricorder@timescaledb:5432/tricorder

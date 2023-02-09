@@ -94,7 +94,7 @@ kubectl -n tricorder port-forward service/api-server 18080:80
 Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. Use the following command to expose the Starship managenment UI service as `tstarship.io` host on ingress port 80.
 
 ```shell
-kubectl apply -f - <<EOF                                                                                                                                                                                                                                                                                            
+kubectl apply -f - <<EOF
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -258,7 +258,7 @@ helm upgrade my-starship tricorder-stable/starship -n tricorder \
 
 # Use specified container image tag
 helm upgrade my-starship tricorder-stable/starship -n tricorder \
-    --set images.tag=<a specific tag>
+    --set apiServer.image.tag=<a specific tag>
 ```
 
 ### Install from local helm-charts repo
