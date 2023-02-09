@@ -67,7 +67,7 @@ kubectl -n tricorder port-forward service/my-starship-api-server
 
 Ingress 用于公开从集群外部到集群内服务的 HTTP 和 HTTPS 路由。 使用以下命令创建 Ingress 规则使用 `starship.io` 作为 host，`80` 作为端口访问 Starship。
 ```shell
-kubectl apply -f - <<EOF                                                                                                                                                                                                                                                                                            
+kubectl apply -f - <<EOF
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
@@ -198,7 +198,7 @@ kubectl delete namespace tricorder
 
 ### 覆盖默认配置
 
-您可以使用--set 参数来覆盖在charts/starship/Values.yaml的配置值。
+您可以使用--set 参数来覆盖在 charts/starship/Values.yaml 的配置值。
 ```
 # Change service type to ClusterIP
 helm upgrade my-starship tricorder-stable/starship -n tricorder \
@@ -206,7 +206,7 @@ helm upgrade my-starship tricorder-stable/starship -n tricorder \
 
 # Use specified container image tag
 helm upgrade my-starship tricorder-stable/starship -n tricorder \
-    --set tag=<a specific tag>
+    --set apiServer.image.tag=<a specific tag>
 ```
 
 ### 从本地仓库中安装
