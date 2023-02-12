@@ -89,7 +89,7 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  jsonb_array_elements_text(pi.data->'procList')::json->'id' as pid,\n  to_timestamp((jsonb_array_elements_text(pi.data->'procList')::json->>'createTime')::double precision/1000) as pid_createTime,\n  pi.data->'container'->>'id' as container_Id,\n  pi.data->'container'->>'podUid' as pod_Id,\n  pi.data->'container'->>'podName' as pod_Name,\n  po.data->'metadata'->>'creationTimestamp' as pod_createTime\nFROM process_info pi left join pods po on pi.data->'container'->>'podUID' = po.data->'metadata'->>'uid'",
+          "rawSql": "SELECT\n  jsonb_array_elements_text(pi.data->'procList')::json->'id' as pid,\n  to_timestamp((jsonb_array_elements_text(pi.data->'procList')::json->>'createTime')::double precision/1000) as pid_createTime,\n  pi.data->'container'->>'id' as container_Id,\n  pi.data->'container'->>'podUid' as pod_Id,\n  pi.data->'container'->>'podName' as pod_Name,\n  po.data->'metadata'->>'creationTimestamp' as pod_createTime\nFROM process_info pi left join pods po on pi.data->'container'->>'podUID' = po.data->'metadata'->>'uid' LIMIT 1000",
           "refId": "A",
           "select": [
             [
