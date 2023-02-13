@@ -51,6 +51,8 @@ spec:
         args:
           - --module_deployer_address=api-server:50051
           - --pg_url=postgresql://postgres:tricorder@timescaledb:5432/tricorder
+          # Corresponds to the sys volume mount below
+          - --host_sys_root_path=/host/sys
         imagePullPolicy: Always
         securityContext:
           # Required to deploy eBPF programs.
