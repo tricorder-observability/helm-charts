@@ -114,7 +114,7 @@ ui:
     repository: public.ecr.aws/tricorder/mgmt-ui
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
-    tag: ""
+    tag: "b04c8f79aa7016e85989a93f2a9ec1fa440e311e_main"
 
   ports:
     uihttp:
