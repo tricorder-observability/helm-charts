@@ -199,12 +199,17 @@ kubectl delete namespace tricorder
 ### 覆盖默认配置
 
 您可以使用--set 参数来覆盖在 charts/starship/Values.yaml 的配置值。
+
 ```
-# Change service type to ClusterIP
+# 将服务类型改成 ClusterIP
 helm upgrade my-starship tricorder-stable/starship -n tricorder \
     --set service.type=ClusterIP
 
-# Use specified container image tag
+# 使用特定版本的 Starship
+helm upgrade my-starship tricorder-stable/starship -n tricorder \
+    --set tag=<a specific tag>
+
+# 使用特定版本的 Starship apiSever
 helm upgrade my-starship tricorder-stable/starship -n tricorder \
     --set apiServer.image.tag=<a specific tag>
 ```
@@ -212,6 +217,7 @@ helm upgrade my-starship tricorder-stable/starship -n tricorder \
 ### 从本地仓库中安装
 
 这个存储库，并用本地路径charts/starship 取代 tricorder-stable/starship.
+
 ```
 git clone https://github.com/tricorder-observability/helm-charts
 git clone git@github.com:tricorder-observability/helm-charts.git

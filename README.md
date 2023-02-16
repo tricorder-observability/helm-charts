@@ -256,7 +256,11 @@ with `--set` flags.
 helm upgrade my-starship tricorder-stable/starship -n tricorder \
     --set service.type=ClusterIP
 
-# Use specified container image tag
+# Use specified container image tag for starship
+helm upgrade my-starship tricorder-stable/starship -n tricorder \
+    --set tag=<a specific tag>
+
+# Use specified container image tag for starship apiSever
 helm upgrade my-starship tricorder-stable/starship -n tricorder \
     --set apiServer.image.tag=<a specific tag>
 ```
