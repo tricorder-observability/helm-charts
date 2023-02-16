@@ -462,7 +462,11 @@ kube-prometheus-stack:
     enabled: false
   grafana:
     enabled: true
-    #defaultDashboardsTimezone: Asia/Shanghai
+    # This must be same as starship/src/api-server/cmd/main.go's
+    # grafana_password flag value.
+    #
+    # TODO(jian): Create a variable as grafana_password, and use that here,
+    # and set api-server's grafana_password flag value explicitly.
     adminPassword: tricorder
     image:
       repository: public.ecr.aws/tricorder/grafana
