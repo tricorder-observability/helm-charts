@@ -20,20 +20,10 @@ spec:
       # Required when hostNetwork is true
       dnsPolicy: ClusterFirstWithHostNet
       volumes:
-      - name: lib-modules
-        hostPath:
-          # Required by BCC to access installed kernel headers
-          path: /lib/modules
-          type: Directory
-      - name: usr-src
-        hostPath:
-          # /lib/modules/build symlinks to subdirs under /usr/src
-          path: /usr/src
-          type: Directory
-      - name: sys
+      - name: host-root
         hostPath:
           # Required by BCC (usage unclear, need more investigation)
-          path: /sys
+          path: /
           type: Directory
       containers:
       - name: agent
@@ -61,12 +51,6 @@ spec:
         # TODO(yzhao): Add resources
         # resources:
         volumeMounts:
-        - name: sys
-          mountPath: /host/sys
-          readOnly: true
-        - name: lib-modules
-          mountPath: /lib/modules
-          readOnly: true
-        - name: usr-src
-          mountPath: /usr/src
+        - name: host-root
+          mountPath: /host
           readOnly: true
