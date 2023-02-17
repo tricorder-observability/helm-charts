@@ -6,7 +6,8 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-tag: ""
+images:
+  tag: ""
 
 serviceAccount:
   # Specifies whether a service account should be created
