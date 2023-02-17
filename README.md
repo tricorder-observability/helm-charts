@@ -258,7 +258,7 @@ helm upgrade my-starship tricorder-stable/starship -n tricorder \
 
 # Use specified container image tag for starship
 helm upgrade my-starship tricorder-stable/starship -n tricorder \
-    --set tag=<a specific tag>
+    --set images.tag=<a specific tag>
 
 # Use specified container image tag for starship apiSever
 helm upgrade my-starship tricorder-stable/starship -n tricorder \

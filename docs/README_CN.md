@@ -207,7 +207,7 @@ helm upgrade my-starship tricorder-stable/starship -n tricorder \
 
 # 使用特定版本的 Starship
 helm upgrade my-starship tricorder-stable/starship -n tricorder \
-    --set tag=<a specific tag>
+    --set images.tag=<a specific tag>
 
 # 使用特定版本的 Starship apiSever
 helm upgrade my-starship tricorder-stable/starship -n tricorder \
