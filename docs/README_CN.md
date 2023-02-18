@@ -90,7 +90,9 @@ EOF
 ```
 
 如果你想使用更多的 Ingress 功能，比如 TLS 访问，
-请根据 Ingress [文档](https://kubernetes.io/zh-cn/docs/concepts/services-networking/ingress/) 来编写对应的配置。
+请根据 Ingress [文档](
+  https://kubernetes.io/zh-cn/docs/concepts/services-networking/ingress/
+  ) 来编写对应的配置。
 
 ## 配置数据留存时间
 
