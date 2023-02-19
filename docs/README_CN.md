@@ -65,7 +65,8 @@ kubectl -n tricorder port-forward service/my-starship-api-server
 
 ## 使用 Ingress 转发访问Starship 管理界面
 
-Ingress 用于公开从集群外部到集群内服务的 HTTP 和 HTTPS 路由。 使用以下命令创建 Ingress 规则使用 `starship.io` 作为 host，`80` 作为端口访问 Starship。
+Ingress 用于公开从集群外部到集群内服务的 HTTP 和 HTTPS 路由。
+使用以下命令创建 Ingress 规则使用 `starship.io` 作为 host，`80` 作为端口访问 Starship。
 ```shell
 kubectl apply -f - <<EOF
 apiVersion: networking.k8s.io/v1
@@ -88,7 +89,10 @@ spec:
 EOF
 ```
 
-如果你想使用更多的 Ingress 功能，比如 TLS 访问， 请根据 Ingress [文档](https://kubernetes.io/zh-cn/docs/concepts/services-networking/ingress/) 来编写对应的配置。
+如果你想使用更多的 Ingress 功能，比如 TLS 访问，
+请根据 Ingress [文档](
+  https://kubernetes.io/zh-cn/docs/concepts/services-networking/ingress/
+  ) 来编写对应的配置。
 
 ## 配置数据留存时间
 
@@ -199,12 +203,17 @@ kubectl delete namespace tricorder
 ### 覆盖默认配置
 
 您可以使用--set 参数来覆盖在 charts/starship/Values.yaml 的配置值。
+
 ```
-# Change service type to ClusterIP
+# 将服务类型改成 ClusterIP
 helm upgrade my-starship tricorder-stable/starship -n tricorder \
     --set service.type=ClusterIP
 
-# Use specified container image tag
+# 使用特定版本的 Starship
+helm upgrade my-starship tricorder-stable/starship -n tricorder \
+    --set images.tag=<a specific tag>
+
+# 使用特定版本的 Starship apiSever
 helm upgrade my-starship tricorder-stable/starship -n tricorder \
     --set apiServer.image.tag=<a specific tag>
 ```
@@ -212,6 +221,7 @@ helm upgrade my-starship tricorder-stable/starship -n tricorder \
 ### 从本地仓库中安装
 
 这个存储库，并用本地路径charts/starship 取代 tricorder-stable/starship.
+
 ```
 git clone https://github.com/tricorder-observability/helm-charts
 git clone git@github.com:tricorder-observability/helm-charts.git
