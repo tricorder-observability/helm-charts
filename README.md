@@ -20,8 +20,8 @@ Starship also collects data from [Prometheus](https://prometheus.io/) and
 Starship uses [Grafana](https://github.com/grafana/grafana) for visualization.
 Use the following info to logon Grafana:
 ```
-username: tricorder
-password: rocks
+username: admin
+password: tricorder
 ```
 
 ## Caveats
