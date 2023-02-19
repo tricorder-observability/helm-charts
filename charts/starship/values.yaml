@@ -152,6 +152,8 @@ timescaledb-single:
     # https://github.com/timescale/timescaledb-docker-ha
     repository: timescale/timescaledb-ha
     # TODO(jian): bump helm chart, https://github.com/timescale/helm-charts/issues/405#issuecomment-1340996682
+    # TODO(jian): remove `image` section. Beacause of current official version is broken, and has to manually override with a custom-built version.
+    # when official release go passed this broken version, we can then remove the whole image section
     tag: pg14.6-ts2.8.1-patroni-static-primary-p3
   # By default those secrets are randomly generated.
   # To prevent misconfiguration, modifications from helm upgrade won't be applied to those secrets.
@@ -165,36 +167,13 @@ timescaledb-single:
       PATRONI_REPLICATION_PASSWORD: "tricorder"
       PATRONI_admin_PASSWORD: "tricorder"
 
-    # This secret should contain environment variables that influence pgBackRest.
-    pgbackrest:
-      PGBACKREST_REPO1_S3_REGION: ""
-      PGBACKREST_REPO1_S3_KEY: ""
-      PGBACKREST_REPO1_S3_KEY_SECRET: ""
-      PGBACKREST_REPO1_S3_BUCKET: ""
-      PGBACKREST_REPO1_S3_ENDPOINT: "s3.amazonaws.com"
-
-    # Selector used to provision your own Secret containing pgbackrest configuration details
-    # This is mutually exclusive with `pgbackrest` option and takes precedence over it.
-    # WARNING: Use this option with caution
-    pgbackrestSecretName: ""
-
-  backup:
-    enabled: false
-
   # Extra custom environment variables.
   # These should be an EnvVar, as this allows you to inject secrets into the environment
   # https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#envvar-v1-core
+  # ref from `tobs` helm chart: https://github.com/timescale/tobs/blob/main/chart/values.yaml#L21
   env:
     - name: TSTUNE_PROFILE
       value: promscale
-
-  # Externally created Kubernetes secrets will be injected into the pods by referencing them here. You
-  # can also add more configuration options and secrets this way (see https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#configure-all-key-value-pairs-in-a-configmap-as-container-environment-variables)
-  envFrom:
-  #  - configMapRef:
-  #      name: my-deployment-settings
-  #      optional: true
-
 
   # This configuration will be passed on to Patroni directly, there are a few things that are
   # injected/changed, these are:
@@ -202,6 +181,7 @@ timescaledb-single:
   #   - any context sensitive parameter (scope, namespace, name) will be overridden by the Kubernetes context
   # https://patroni.readthedocs.io/en/latest/SETTINGS.html#settings
   # refs: https://docs.timescale.com/promscale/latest/recommendations/config-recomm/#database-configuration
+  # refs https://github.com/timescale/tobs/blob/main/chart/values.yaml#L39
   patroni:
     bootstrap:
       dcs:
@@ -225,43 +205,9 @@ timescaledb-single:
     # These scripts are all projected to the same directory and will be executed
     # in sorted order only once: After a cluster initialization
     # Some examples:
+    # timescale-post-init configmap defined in ./templates/database/post-init-confgimap.yaml
     - configMap:
         name: timescale-post-init
-  # Values for defining the primary & replica Kubernetes Services.
-  service:
-    primary:
-      # One of (ClusterIP | LoadBalancer | NodePort). Headless services are not supported.
-      type: ClusterIP
-      # The port used by the service.
-      port: 5432
-      # Additional labels to be added to the Service.
-      labels: {}
-      # Additional annotations to be added to the Service.
-      annotations: {}
-      # Define extra fields to be interpolated into the Service spec.
-      #
-      # This allows for adding support for new features and functionality which may not yet
-      # be directly supported in this chart.
-      spec: {}
-      # loadBalancerSourceRanges:
-      # - "0.0.0.0/0"
-
-    replica:
-      # One of (ClusterIP | LoadBalancer | NodePort). Headless services are not supported.
-      type: ClusterIP
-      # The port used by the service.
-      port: 5432
-      # Additional labels to be added to the Service.
-      labels: {}
-      # Additional annotations to be added to the Service.
-      annotations: {}
-      # Define extra fields to be interpolated into the Service spec.
-      #
-      # This allows for adding support for new features and functionality which may not yet
-      # be directly supported in this chart.
-      spec: {}
-      # loadBalancerSourceRanges:
-      # - "0.0.0.0/0"
 
   persistentVolumes:
     # For sanity reasons, the actual PGDATA and wal directory will be subdirectories of the Volume mounts,
@@ -277,140 +223,19 @@ timescaledb-single:
     requests:
       cpu: 100m
       memory: 2Gi
+  # refs: https://github.com/timescale/tobs/blob/main/chart/values.yaml#L62
   sharedMemory:
     useMount: true
 
-  # timescaledb-tune will be run with the Pod resources requests or - if not set - its limits.
-  # This should give a reasonably tuned PostgreSQL instance.
-  # Any PostgreSQL parameter that is explicitly set in the Patroni configuration will override
-  # the auto-tuned variables.
-  timescaledbTune:
-    enabled: true
-    # For full flexibility, we allow you to override any timescaledb-tune parameter below.
-    # However, these parameters only take effect on newly scheduled pods and their settings are
-    # only visibible inside those new pods.
-    # Therefore you probably want to set explicit overrides in patroni.bootstrap.dcs.postgresql.parameters,
-    # as those will take effect as soon as possible.
-    # https://github.com/timescale/timescaledb-tune
-    args: {}
-      # max-conns: 120
-      # cpus: 5
-      # memory: 4GB
-
-  # pgBouncer does connection pooling for PostgreSQL
-  # https://www.pgbouncer.org/
-  # enabling pgBouncer will run an extra container in every Pod, serving a pgBouncer
-  # pass-through instance
-  pgBouncer:
-    # Solve the problem of too many connections.
-    # Needs more work, disable for now, as it's not working
-    # as expected.
-    enabled: false
-    port: 6432
-    config:
-    # DANGER: The below settings are considered to be safe to set, and we recommend
-    # you do set these to appropriate values for you.
-    # However, for flexibility, we do allow the override of any pg_bouncer setting
-    # many of which are vital to the operation of this helm chart.
-    # The values we do not suggest altering are set in the template
-    # https://github.com/timescale/helm-charts/blob/main/charts/timescaledb-single/templates/configmap-pgbouncer.yaml#L35-L50
-    # Only override these settings if you are confident of  what you are doing.
-      server_reset_query: DISCARD ALL
-      max_client_conn: 500
-      default_pool_size: 20
-      pool_mode: transaction
-    pg_hba:
-    - local     all postgres                   peer
-    - host      all postgres,standby 0.0.0.0/0 reject
-    - host      all postgres,standby ::0/0     reject
-    - hostssl   all all              0.0.0.0/0 md5
-    - hostssl   all all              ::0/0     md5
-    - hostnossl all all              0.0.0.0/0 reject
-    - hostnossl all all              ::0/0     reject
-    # Secret should contain user/password pairs in the format expected by pgbouncer
-    # https://www.pgbouncer.org/config.html#authentication-file-format
-    # example:
-    # userlist.txt: |
-    #   "username" "hashedpassword"
-    #   "username2" "hashedpassword2"
-    userListSecretName:
-
-  networkPolicy:
-    enabled: false
-    prometheusApp: prometheus
-    # Below you can specify a whitelist of Ingress rules, for more information:
-    # https://kubernetes.io/docs/concepts/services-networking/network-policies/#the-networkpolicy-resource
-    ingress:
-    # - from:
-    #   - podSelector:
-    #       matchLabels:
-    #         app: foo
-    #   ports:
-    #   - protocol: TCP
-    #       port: 11111
+  # TODO(jian): investigate pgBouncer configurations:https://github.com/timescale/helm-charts/blob/b9cbc2de4e273645e3e3223315d4296fa982c20b/charts/timescaledb-single/values.yaml#L454
 
   # Prometheus exporter for PostgreSQL server metrics.
   # https://github.com/prometheus-community/postgres_exporter
   prometheus:
     enabled: true
-    image:
-      repository: quay.io/prometheuscommunity/postgres-exporter
-      tag: v0.11.1
-      pullPolicy: IfNotPresent
-    # Extra custom environment variables for prometheus.
-    # These should be an EnvVar, as this allows you to inject secrets into the environment
-    # https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#envvar-v1-core
-    env:
-    # - name: NOT_A_SECRET
-    #   value: "test"
-    # - name: MYAPPLICATION_STANDBY_PASSWORDS
-    #   valueFrom:
-    #     secretKeyRef:
-    #       name: myapplication-passwords
-    #       key: standby
-    # Additional volumes for prometheus, e.g., to support additional queries.
-    # These should be a Volume, as this allows you to inject any kind of Volume
-    # https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#volume-v1-core
-    volumes:
-    # - name: exporter-config
-    #   configMap:
-    #     name: exporter-prometheus
-    #     items:
-    #       - key: metrics_queries
-    #         path: queries.yaml
-    # Additional volume mounts, to be used in conjunction with the above variable.
-    # https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.16/#volumemount-v1-core
-    volumeMounts:
-    # - name: exporter-config
-    #   mountPath: /var/exporter
-
   podMonitor:
     # Specifies whether PodMonitor for Prometheus operator should be created
     enabled: true
-    path: /metrics
-    interval: 10s
-  # For new deployments, we would advise Parallel here, however as that change breaks previous
-  # deployments, it is set to OrderedReady here
-  podManagementPolicy: OrderedReady
-
-  rbac:
-    # Specifies whether RBAC resources should be created
-    create: true
-
-  serviceAccount:
-    # Specifies whether a ServiceAccount should be created
-    create: true
-    # The name of the ServiceAccount to use.
-    # If not set and create is true, a name is generated using the fullname template
-    name:
-    # A map of annotations to be set on the ServiceAccount
-    annotations: {}
-
-  debug:
-    # This setting is mainly for during development, debugging or troubleshooting.
-    # This command will be executed *before* the main container starts. In the
-    # example below, we can mimick a slow restore by sleeping for 5 minutes before starting
-    execStartPre:  # sleep 300
 
 promscale:
   enabled: true
