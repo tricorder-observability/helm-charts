@@ -147,7 +147,8 @@ timescaledb-single:
     # https://github.com/timescale/timescaledb-docker-ha
     repository: timescale/timescaledb-ha
     # TODO(jian): bump helm chart, https://github.com/timescale/helm-charts/issues/405#issuecomment-1340996682
-    # remove `image` section
+    # TODO(jian): remove `image` section. Beacause of current official version is broken, and has to manually override with a custom-built version.
+    # when official release go passed this broken version, we can then remove the whole image section
     tag: pg14.6-ts2.8.1-patroni-static-primary-p3
   # By default those secrets are randomly generated.
   # To prevent misconfiguration, modifications from helm upgrade won't be applied to those secrets.
