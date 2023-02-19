@@ -6,6 +6,11 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
+# Specifies of starship image's tag whose default is the chart appVersion.
+# If set, starship agent, ui and api server will use this tag.
+images:
+  tag: ""
+
 serviceAccount:
   # Specifies whether a service account should be created
   create: true
