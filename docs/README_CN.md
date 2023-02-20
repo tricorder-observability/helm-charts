@@ -224,7 +224,6 @@ helm upgrade my-starship tricorder-stable/starship -n tricorder \
 
 ```
 git clone https://github.com/tricorder-observability/helm-charts
-git clone git@github.com:tricorder-observability/helm-charts.git
 cd helm-charts
 # You'll need this step to fetch the dependent charts
 helm dep update charts/starship
