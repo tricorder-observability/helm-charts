@@ -273,6 +273,11 @@ charts local path `charts/starship`.
 ```shell
 git clone git@github.com:tricorder-observability/helm-charts.git
 cd helm-charts
+
+# Add dependency repos
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo add timescale https://charts.timescale.com
+
 # You'll need this step to fetch the dependent charts
 helm dep update charts/starship
 helm install my-starship charts/starship -n tricorder
