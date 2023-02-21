@@ -25,6 +25,12 @@ spec:
           # Required by BCC (usage unclear, need more investigation)
           path: /
           type: Directory
+      - name: host-sys
+        hostPath:
+          # Required by BCC to write probe entries in debugfs
+          # /sys/kernel/tracing/{kprobe,uprobe,...}_events
+          path: /sys
+          type: Directory
       containers:
       - name: agent
         env:
@@ -53,4 +59,7 @@ spec:
         volumeMounts:
         - name: host-root
           mountPath: /host
+          readOnly: true
+        - name: host-sys
+          mountPath: /sys
           readOnly: true
