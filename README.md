@@ -50,6 +50,25 @@ TODO: Add instructions for other public Clouds.
   [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
   for database pods, which requires EBS CSI.
 
+### ALIYUN ACK
+- If you are using Aliyun ACK, default install
+  [Aliyun CSI](https://help.aliyun.com/document_detail/134722.html)
+  on your ACK cluster. This is required because Helm charts create
+  [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
+  for database pods, which requires Aliyun CSI.`
+- before install starship, you need to check default storageclass,
+  ```shell
+  kubectl get storageclass|grep default
+  ````
+- if not exist default storageclass, need to execute command to create default storageclass`
+  ```shell
+  kubectl patch storageclass <you-storageclass-name> -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+  # example:
+  kubectl patch storageclass alibabacloud-cnfs-nas -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+  ```
+  **WARNING:** if you ack cluster is not exist default storageclass, you install starship will be failed.
+
+
 ## Install
 
 Change namespace to your own, here we use `tricorder` as an example.
