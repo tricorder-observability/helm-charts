@@ -56,18 +56,17 @@ TODO: Add instructions for other public Clouds.
   on your ACK cluster. This is required because Helm charts create
   [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)
   for database pods, which requires Aliyun CSI.
-- before install starship, you need to check default storageclass,
+- Before installing Starship, you need to check default storageclass,
   ```shell
-  kubectl get storageclass|grep default
+  kubectl get storageclass | grep default
   ````
-- if not exist default storageclass, need to execute command to create default storageclass`
+- If your cluster has no default storageclass, you'll need to run the command below to create the default storageclass
   ```shell
-  kubectl patch storageclass <you-storageclass-name> -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+  kubectl patch storageclass <you-storageclass-name> --patch '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
   # example:
-  kubectl patch storageclass alibabacloud-cnfs-nas -p '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+  kubectl patch storageclass alibabacloud-cnfs-nas --patch '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
   ```
-**WARNING:** if you ack cluster is not exist default storageclass,
-you install starship will be failed.
+**WARNING:** Starship installation will fail if there is no default storageclass on your cluster.
 
 
 ## Install
