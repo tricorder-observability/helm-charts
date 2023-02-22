@@ -7,7 +7,8 @@
 [中文](./docs/README_CN.md)
 
 Helm charts for deploying Starship Observability platform,
-[Tricorder Observability](https://tricorder.dev)'s next-generation Observability platform.
+[Tricorder Observability](https://tricorder.dev)'s
+next-generation Observability platform.
 
 Starship currently only runs on Kubernetes. Starship provides eBPF-powered
 instrumentation-free Service Map.  No need to change a single line
@@ -51,6 +52,7 @@ TODO: Add instructions for other public Clouds.
   for database pods, which requires EBS CSI.
 
 ### ALIYUN ACK
+
 - If you are using Aliyun ACK, default install
   [Aliyun CSI](https://help.aliyun.com/document_detail/134722.html)
   on your ACK cluster. This is required because Helm charts create
@@ -60,14 +62,15 @@ TODO: Add instructions for other public Clouds.
   ```shell
   kubectl get storageclass | grep default
   ````
-- If your cluster has no default storageclass, you'll need to run the command below to create the default storageclass
+- If your cluster has no default storageclass,
+you'll need to run the command below to create the default storageclass
   ```shell
   kubectl patch storageclass <you-storageclass-name> --patch '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
   # example:
   kubectl patch storageclass alibabacloud-cnfs-nas --patch '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
   ```
-**WARNING:** Starship installation will fail if there is no default storageclass on your cluster.
-
+**WARNING:** Starship installation will fail if there is
+no default storageclass on your cluster.
 
 ## Install
 
@@ -95,14 +98,16 @@ kubectl get service -n tricorder
 ![image](https://user-images.githubusercontent.com/112656580/215043391-6c4cd4bd-3a58-472f-a688-b88f11ef90c1.png)
 
 Navigate to `http://${EXTERNAL-IP}` in your browser to access Starship's Web UI,
-note that the protocol is **HTTP**, not **HTTPS**. You will be able to open Grafana instance
+note that the protocol is **HTTP**, not **HTTPS**.
+You will be able to open Grafana instance
 by following the link on the left panel of the management Web UI.
 
 ## Access Starship Web UI through `kubectl port-forward`
 
-You can expose the services to your local network using the `kubectl port-forward` command.
-Use the following command to expose the Starship managenment UI service on port
-18080 on localhost: `http://localhost:18080`.
+You can expose the services to your local network
+using the `kubectl port-forward` command.
+Use the following command to expose the Starship managenment UI service
+on port 18080 on localhost: `http://localhost:18080`.
 
 ```shell
 kubectl -n tricorder port-forward service/api-server 18080:80
@@ -110,7 +115,10 @@ kubectl -n tricorder port-forward service/api-server 18080:80
 
 ## Access Starship Web UI through Ingress
 
-Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. Use the following command to expose the Starship managenment UI service as `tstarship.io` host on ingress port 80.
+Ingress exposes HTTP and HTTPS routes from outside the cluster
+to services with in the cluster.
+Use the following command to expose the Starship managenment UI service
+as `tstarship.io` host on ingress port 80.
 
 ```shell
 kubectl apply -f - <<EOF
@@ -134,7 +142,9 @@ spec:
 EOF
 
 ```
-If you want to use more ingress features, such as TLS termination, please follow this (documentation)[https://kubernetes.io/docs/concepts/services-networking/ingress/] to write ingress configuration.
+If you want to use more ingress features, such as TLS termination,
+please follow this [documentation](https://kubernetes.io/docs/concepts/services-networking/ingress/)
+to write ingress configuration.
 
 ## Data Retention
 
