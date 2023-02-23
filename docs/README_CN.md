@@ -1,10 +1,9 @@
-# Starship 安装文档
+# [星舰（Starship）](https://github.com/tricorder-observability/starship)![Starship stars](https://img.shields.io/github/stars/tricorder-observability/starship?style=social) 安装文档
 
 ![image](https://user-images.githubusercontent.com/112656580/219543149-2e2bbebc-1891-4dcb-ba66-0f8b7f1bcd68.png)
 ![image](https://user-images.githubusercontent.com/112656580/219542981-5a4e5fb1-0603-4c0b-91e2-c94c36a92c0b.png)
 
-本仓库是用于部署[星舰（Starship）](https://github.com/tricorder-observability/starship)
-![Starship stars](https://img.shields.io/github/stars/tricorder-observability/starship?style=social)
+本仓库是用于安装[星舰（Starship）](https://github.com/tricorder-observability/starship)
 可观测平台的 Helm charts，
 星舰是[三度观测云](https://tricorder.dev)开发的下一代可观测性平台。
 
