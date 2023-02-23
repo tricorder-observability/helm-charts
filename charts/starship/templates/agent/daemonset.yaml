@@ -41,6 +41,10 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: spec.nodeName
+          - name: POD_ID
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.uid
         # keep default function here, because .Chart.AppVersion cannot be invoked as function.
         # https://helm.sh/docs/chart_template_guide/functions_and_pipelines/#using-the-default-function
         # If .Values.agent.image.tag is empty, .Values.tag will be used. But if .Values.tag is empty, .Chart.AppVersion will be used as final tag.
