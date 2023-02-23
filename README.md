@@ -37,17 +37,6 @@ username: admin
 password: tricorder
 ```
 
-## Caveats
-
-**WARNING** Do not install multiple Starship releases in multiple namespaces.
-That won't work because of system limitations. If you accidentally did that,
-follow the [uninstall](#uninstall) instructions to remove all artifacts and reinstall.
-
-**WARNING** Do not install multiple releases in the same namespace.
-
-**WARNING:** This project is currently in active development. Consider this a
-technical preview only.
-
 ## Prerequisites
 
 - Kubernetes 1.16+ [get started](https://kubernetes.io/docs/setup/)
@@ -157,6 +146,17 @@ EOF
 If you want to use more ingress features, such as TLS termination,
 please follow this [documentation](https://kubernetes.io/docs/concepts/services-networking/ingress/)
 to write ingress configuration.
+
+## Caveats
+
+**WARNING** Do not install multiple Starship releases in multiple namespaces.
+That won't work because of system limitations. If you accidentally did that,
+follow the [uninstall](#uninstall) instructions to remove all artifacts and reinstall.
+
+**WARNING** Do not install multiple releases in the same namespace.
+
+**WARNING:** This project is currently in active development. Consider this a
+technical preview only.
 
 ## Data Retention
 
