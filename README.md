@@ -10,6 +10,14 @@ Helm charts for deploying Starship ![Starship stars](https://img.shields.io/gith
 [Tricorder Observability](https://tricorder.dev)'s
 next-generation Observability platform.
 
+🖖 Starship 🪐 is a next-generation Observability platform built on
+🐝 eBPF➕WASM ![image](https://user-images.githubusercontent.com/112656580/219543881-046af389-ca10-4dda-b79a-a60088a1220a.png)
+
+🚀 Starship is to modern Observability, as ChatGPT is to consumer knownledge discovery.
+🐝 eBPF enables instrumentation-free data collection, and
+![image](https://user-images.githubusercontent.com/112656580/219543881-046af389-ca10-4dda-b79a-a60088a1220a.png)
+WASM complements eBPF's inability to perform complex data processing.
+
 Starship currently only runs on Kubernetes. Starship provides eBPF-powered
 instrumentation-free Service Map.  No need to change a single line
 of code in your application, instantly access a single-pane view of the
