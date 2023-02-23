@@ -6,7 +6,7 @@
 
 [中文](./docs/README_CN.md)
 
-Helm charts for deploying Starship Observability platform,
+Helm charts for deploying Starship ![Starship stars](https://img.shields.io/github/stars/tricorder-observability/starship?style=social)
 [Tricorder Observability](https://tricorder.dev)'s
 next-generation Observability platform.
 
