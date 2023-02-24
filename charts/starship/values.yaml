@@ -110,14 +110,12 @@ apiServer:
 
 agent:
   image:
-    repository: tricorder-observability/agent
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
 
 ui:
   image:
-    repository: tricorder-observability/mgmt-ui
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
