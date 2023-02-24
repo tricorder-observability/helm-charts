@@ -9,8 +9,10 @@
 ![image](https://user-images.githubusercontent.com/112656580/219543149-2e2bbebc-1891-4dcb-ba66-0f8b7f1bcd68.png)
 ![image](https://user-images.githubusercontent.com/112656580/219542981-5a4e5fb1-0603-4c0b-91e2-c94c36a92c0b.png)
 
-Helm charts for deploying [Starship](https://github.com/tricorder-observability/starship)，
-[Tricorder Observability](https://tricorder.dev)'s next-generation Observability platform.
+Helm charts for deploying
+[Starship](https://github.com/tricorder-observability/starship)，
+[Tricorder Observability](https://tricorder.dev)'s
+next-generation Observability platform.
 
 🖖 Starship 🪐 is a next-generation Observability platform built on
 🐝 eBPF➕WASM ![image](https://user-images.githubusercontent.com/112656580/219543881-046af389-ca10-4dda-b79a-a60088a1220a.png)
