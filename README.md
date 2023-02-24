@@ -296,6 +296,10 @@ helm upgrade my-starship tricorder-stable/starship -n tricorder \
 helm upgrade my-starship tricorder-stable/starship -n tricorder \
     --set images.tag=<a specific tag>
 
+# Use specified image registry
+helm upgrade my-starship tricorder-stable/starship -n tricorder \
+    --set images.imageRegistry=<a specific imageRegistry>
+
 # Use specified container image tag for starship apiSever
 helm upgrade my-starship tricorder-stable/starship -n tricorder \
     --set apiServer.image.tag=<a specific tag>
