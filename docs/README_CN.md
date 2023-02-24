@@ -39,6 +39,23 @@ kubectl create namespace tricorder
 helm install my-starship tricorder-stable/starship -n tricorder
 ```
 
+### 阿里云 ACK
+
+- 如果你使用阿里云 ACK，阿里云会默认安装 [ACK CSI插件](https://help.aliyun.com/document_detail/134722.html) 在你的集群中。
+  你的集群中必须要要有 CSI 插件，因为 Helm Charts 需要为数据库 Pod 创建持久卷 [PersistentVolume](https://kubernetes.io/docs/concepts/storage/persistent-volumes/)，这需要 CSI 插件。
+- 在安装 Starship 之前，你需要检查你的集群中是否有默认的 StorageClass，如果没有，你需要创建一个。
+  你可以通过下面的命令来查看你的集群中是否有默认的 StorageClass。
+  ```shell
+  kubectl get storageclass | grep default
+  ````
+  如果你的集群中没有默认的 StorageClass，你可以通过下面的命令来创建默认的 StorageClass。
+  ````shell
+  kubectl patch storageclass <you-storageclass-name> --patch '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+  # 例如:
+  kubectl patch storageclass alibabacloud-cnfs-nas --patch '{"metadata": {"annotations":{"storageclass.kubernetes.io/is-default-class":"true"}}}'
+  ```
+**警告** 如果你的集群中没有默认的 StorageClass，你需要创建一个默认的 StorageClass，否则 Starship 无法正常安装在你的集群中。
+
 ## 通过 LoadBalancer External IP 访问 Starship Web 管理界面
 
 Starship默认通过 LoadBalancer 来发布 Web UI
