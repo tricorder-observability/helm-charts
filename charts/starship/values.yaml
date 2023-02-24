@@ -6,9 +6,10 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-# Specifies of starship image's tag whose default is the chart appVersion.
-# If set, starship agent, ui and api server will use this tag.
+# Specifies of starship image's tag and imageRegistry
+# If set, starship agent, ui and api server will use this.
 images:
+  imageRegistry: "ghcr.io"
   tag: ""
 
 serviceAccount:
@@ -60,7 +61,7 @@ apiServer:
     type: LoadBalancer
 
   image:
-    repository: public.ecr.aws/tricorder/api-server
+    repository: tricorder-observability/api-server
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
@@ -109,14 +110,14 @@ apiServer:
 
 agent:
   image:
-    repository: public.ecr.aws/tricorder/agent
+    repository: tricorder-observability/agent
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
 
 ui:
   image:
-    repository: public.ecr.aws/tricorder/mgmt-ui
+    repository: tricorder-observability/mgmt-ui
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
