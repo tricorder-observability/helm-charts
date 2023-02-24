@@ -6,8 +6,7 @@ imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 
-# Specifies of starship image's tag and imageRegistry
-# If set, starship agent, ui and api server will use this.
+# Starship api-server, agent, mgmt-ui registry.
 images:
   registry: "ghcr.io/tricorder-observability"
   tag: ""
