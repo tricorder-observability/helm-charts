@@ -9,7 +9,7 @@ fullnameOverride: ""
 # Specifies of starship image's tag and imageRegistry
 # If set, starship agent, ui and api server will use this.
 images:
-  imageRegistry: "ghcr.io"
+  registry: "ghcr.io/tricorder-observability"
   tag: ""
 
 serviceAccount:
