@@ -290,15 +290,19 @@ You can override configuration values defined in `charts/starship/Values.yaml`
 with `--set` flags.
 
 ```shell
-# Change service type to ClusterIP
+# Override Starship service's type to ClusterIP
 helm upgrade my-starship tricorder-stable/starship -n tricorder \
     --set service.type=ClusterIP
 
-# Use specified container image tag for starship
+# Override Starship container images' tag
 helm upgrade my-starship tricorder-stable/starship -n tricorder \
     --set images.tag=<a specific tag>
 
-# Use specified container image tag for starship apiSever
+# Override Starship container images' registry
+helm upgrade my-starship tricorder-stable/starship -n tricorder \
+    --set images.registry=<a specific imageRegistry>
+
+# Override Starship api-server container image's tag
 helm upgrade my-starship tricorder-stable/starship -n tricorder \
     --set apiServer.image.tag=<a specific tag>
 ```
