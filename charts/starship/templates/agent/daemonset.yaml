@@ -48,7 +48,7 @@ spec:
         # keep default function here, because .Chart.AppVersion cannot be invoked as function.
         # https://helm.sh/docs/chart_template_guide/functions_and_pipelines/#using-the-default-function
         # If .Values.agent.image.tag is empty, .Values.tag will be used. But if .Values.tag is empty, .Chart.AppVersion will be used as final tag.
-        image: "{{ .Values.images.registry }}/{{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag | default .Values.images.tag | default .Chart.AppVersion }}"
+        image: "{{ .Values.images.registry }}/agent:{{ .Values.agent.image.tag | default .Values.images.tag | default .Chart.AppVersion }}"
         args:
           - --module_deployer_address=api-server:50051
           - --pg_url=postgresql://postgres:tricorder@timescaledb:5432/tricorder
