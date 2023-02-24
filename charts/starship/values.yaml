@@ -61,7 +61,6 @@ apiServer:
     type: LoadBalancer
 
   image:
-    repository: tricorder-observability/api-server
     pullPolicy: IfNotPresent
     # Overrides the image tag whose default is the chart appVersion.
     tag: ""
