@@ -8,7 +8,7 @@ fullnameOverride: ""
 
 # Starship api-server, agent, mgmt-ui registry.
 images:
-  registry: "ghcr.io/tricorder-observability"
+  registry: "docker.io/tricorderobservability"
   tag: ""
 
 serviceAccount:
