@@ -74,9 +74,6 @@ no default storageclass on your cluster.
 
 Change namespace to your own, here we use `tricorder` as an example.
 
-> NOTE: chart will pull image from `ghcr.io` registry, If your kubernetes pulls images with timeouts, 
-> you can choose to use our docker hub images with `--set images.registry=docker.io/tricorderobservability`
-
 ```shell
 helm repo add tricorder-stable \
     https://tricorder-observability.github.io/helm-charts
