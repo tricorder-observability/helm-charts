@@ -37,9 +37,8 @@ If release name contains chart name it will be used as a full name.
 
 {{/* Set Grafana Datasource Connection Password */}}
 {{- define "tricorder.grafana.datasource.connection.password" -}}
-{{- $kubePrometheus := index .Values "kube-prometheus-stack" -}}
 {{- $isDBURI := ne .Values.promscale.connection.uri "" -}}
-{{- $grafanaDatasourcePasswd := ternary (include "tricorder.dburi.password" . ) ($kubePrometheus.grafana.timescale.datasource.pass) ($isDBURI) -}}
+{{- $grafanaDatasourcePasswd := ternary (include "tricorder.dburi.password" . ) (.Values.grafana.timescale.datasource.pass) ($isDBURI) -}}
   {{- if ne $grafanaDatasourcePasswd "" -}}
     {{- printf $grafanaDatasourcePasswd -}}
   {{- else -}}
