@@ -321,8 +321,6 @@ grafana:
       # These files are put into config maps by
       # charts/starship/templates/grafana/grafana-dashboards-conf.yaml
       files:
-        - dashboards/k8s-cluster.json
-        - dashboards/k8s-hardware.json
         - dashboards/apm-dependencies.json
         - dashboards/apm-home.json
         - dashboards/apm-service-dependencies-downstream.json
