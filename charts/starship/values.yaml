@@ -390,6 +390,7 @@ kube-prometheus-stack:
     enabled: false
   grafana:
     enabled: false
+    forceDeployDashboards: true
 
   prometheus:
     enabled: true
