@@ -380,8 +380,6 @@ grafana:
     enabled: true
     labels:
       release: prometheus
-    interval: ""
-    tlsConfig: {}
 
 kube-prometheus-stack:
   enabled: true
