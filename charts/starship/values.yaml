@@ -297,7 +297,6 @@ grafana:
     # Overrides the Grafana image tag whose default is the chart appVersion
     # TODO(yzhao): Change this to inherit the tag of starship
     tag: v0.0.9
-    sha: ''
     pullPolicy: IfNotPresent
   resources:
     requests:
