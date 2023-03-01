@@ -283,111 +283,111 @@ promscale:
       traces:
         default_retention_period: 7d
 
+grafana:
+  enabled: true
+  # This must be same as starship/src/api-server/cmd/main.go's
+  # grafana_password flag value.
+  #
+  # TODO(jian): Create a variable as grafana_password, and use that here,
+  # and set api-server's grafana_password flag value explicitly.
+  adminPassword: tricorder
+  image:
+    # source repo: https://github.com/tricorder-observability/grafana
+    repository: docker.io/tricorderobservability/grafana
+    # Overrides the Grafana image tag whose default is the chart appVersion
+    # TODO(yzhao): Change this to inherit the tag of starship
+    tag: v0.0.9
+    pullPolicy: IfNotPresent
+  resources:
+    requests:
+      cpu: 10m
+      memory: 128Mi
+    limits:
+      cpu: "1"
+      memory: 2Gi
+  sidecar:
+    datasources:
+      enabled: true
+      label: tricorder_datasource
+      labelValue: "true"
+      defaultDatasourceEnabled: false
+
+    dashboards:
+      multicluster:
+        global:
+          enabled: false
+      enabled: true
+      # These files are put into config maps by
+      # charts/starship/templates/grafana/grafana-dashboards-conf.yaml
+      files:
+        - dashboards/apm-dependencies.json
+        - dashboards/apm-home.json
+        - dashboards/apm-service-dependencies-downstream.json
+        - dashboards/apm-service-dependencies-upstream.json
+        - dashboards/apm-service-overview.json
+        - dashboards/promscale.json
+        - dashboards/postgres-overview.json
+        - dashboards/postgres-details.json
+        - dashboards/demo-ebpf-http.json
+        - dashboards/metadata-process.json
+  persistence:
+    type: pvc
+    enabled: true
+    size: 1Gi
+    accessModes:
+      - ReadWriteOnce
+  prometheus:
+    datasource:
+      enabled: true
+      # By default url of data source is set to ts-prom connector instance
+      # deployed with this chart. If a connector isn't used this should be
+      # set to the prometheus-server.
+      url: "http://{{ .Release.Name }}-promscale.{{ .Release.Namespace }}.svc:9201"
+  timescale:
+    datasource:
+      enabled: true
+      user: postgres
+      # leaving password empty will cause helm to generate a random password
+      pass: "tricorder"
+      dbName: postgres
+      sslMode: require
+      # By default the url/host is set to the db instance deployed
+      # with this chart
+      host: "timescaledb.{{ .Release.Namespace }}.svc"
+      port: 5432
+  jaeger:
+    datasource:
+      enabled: true
+    # Endpoint for integrating jaeger datasource in grafana. This should point to HTTP endpoint, not gRPC.
+    tricorderTracesQueryEndPoint: "{{ .Release.Name }}-promscale.{{ .Release.Namespace }}.svc:9201"
+
+  additionalDataSources:
+    - name: timescale-tricorder
+      uid: timescaledb_tricorder
+      access: proxy
+      editable: false
+      type: postgres
+      url: timescaledb:5432
+      database: tricorder
+      user: postgres
+      jsonData:
+        postgresVersion: 1400
+        timescaledb: true
+      secureJsonData:
+        password: tricorder
+      version: 1
+  serviceMonitor:
+    enabled: true
+    labels:
+      release: prometheus
+
 kube-prometheus-stack:
   enabled: true
   alertmanager:
     enabled: false
   grafana:
-    enabled: true
-    # This must be same as starship/src/api-server/cmd/main.go's
-    # grafana_password flag value.
-    #
-    # TODO(jian): Create a variable as grafana_password, and use that here,
-    # and set api-server's grafana_password flag value explicitly.
-    adminPassword: tricorder
-    image:
-      repository: public.ecr.aws/tricorder/grafana
-      # Overrides the Grafana image tag whose default is the chart appVersion
-      # TODO(yzhao): Change this to inherit the tag of starship
-      tag: v0.0.9
-      sha: ''
-      pullPolicy: IfNotPresent
-    resources:
-      requests:
-        cpu: 10m
-        memory: 128Mi
-      limits:
-        cpu: "1"
-        memory: 2Gi
-    sidecar:
-      datasources:
-        enabled: true
-        label: tricorder_datasource
-        labelValue: "true"
-        defaultDatasourceEnabled: false
-
-      dashboards:
-        multicluster:
-          global:
-            enabled: false
-        enabled: true
-        # These files are put into config maps by
-        # charts/starship/templates/grafana/grafana-dashboards-conf.yaml
-        files:
-          - dashboards/k8s-cluster.json
-          - dashboards/k8s-hardware.json
-          - dashboards/apm-dependencies.json
-          - dashboards/apm-home.json
-          - dashboards/apm-service-dependencies-downstream.json
-          - dashboards/apm-service-dependencies-upstream.json
-          - dashboards/apm-service-overview.json
-          - dashboards/promscale.json
-          - dashboards/postgres-overview.json
-          - dashboards/postgres-details.json
-          - dashboards/demo-ebpf-http.json
-          - dashboards/metadata-process.json
-    persistence:
-      type: pvc
-      enabled: true
-      size: 1Gi
-      accessModes:
-        - ReadWriteOnce
-    prometheus:
-      datasource:
-        enabled: true
-        # By default url of data source is set to ts-prom connector instance
-        # deployed with this chart. If a connector isn't used this should be
-        # set to the prometheus-server.
-        url: "http://{{ .Release.Name }}-promscale.{{ .Release.Namespace }}.svc:9201"
-    timescale:
-      datasource:
-        enabled: true
-        user: postgres
-        # leaving password empty will cause helm to generate a random password
-        pass: "tricorder"
-        dbName: postgres
-        sslMode: require
-        # By default the url/host is set to the db instance deployed
-        # with this chart
-        host: "timescaledb.{{ .Release.Namespace }}.svc"
-        port: 5432
-    jaeger:
-      datasource:
-        enabled: true
-      # Endpoint for integrating jaeger datasource in grafana. This should point to HTTP endpoint, not gRPC.
-      tricorderTracesQueryEndPoint: "{{ .Release.Name }}-promscale.{{ .Release.Namespace }}.svc:9201"
-
-    additionalDataSources:
-      - name: timescale-tricorder
-        uid: timescaledb_tricorder
-        access: proxy
-        editable: false
-        type: postgres
-        url: timescaledb:5432
-        database: tricorder
-        user: postgres
-        jsonData:
-          postgresVersion: 1400
-          timescaledb: true
-        secureJsonData:
-          password: tricorder
-        version: 1
-    serviceMonitor:
-      enabled: true
-      labels:
-        release: prometheus
-      interval: ""
-      tlsConfig: {}
+    enabled: false
+    forceDeployDashboards: true
 
   prometheus:
     enabled: true

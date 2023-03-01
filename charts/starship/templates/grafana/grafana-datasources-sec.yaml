@@ -1,6 +1,5 @@
-{{- $kubePrometheus := index .Values "kube-prometheus-stack" -}}
-{{ if and $kubePrometheus.grafana.enabled $kubePrometheus.grafana.sidecar.datasources.enabled -}}
-{{ if or $kubePrometheus.grafana.timescale.datasource.enabled $kubePrometheus.grafana.prometheus.datasource.enabled -}}
+{{ if .Values.grafana.enabled -}}
+{{ if and .Values.grafana.timescale.datasource.enabled .Values.grafana.prometheus.datasource.enabled -}}
 apiVersion: v1
 kind: Secret
 metadata:
@@ -18,53 +17,53 @@ stringData:
     apiVersion: 1
 
     datasources:
-{{- if $kubePrometheus.grafana.prometheus.datasource.enabled }}
+{{- if .Values.grafana.prometheus.datasource.enabled }}
       - name: promescale-prometheus
         # Prometheus data query protocol (aka PromQL)
         type: prometheus
-        url: {{ tpl $kubePrometheus.grafana.prometheus.datasource.url . }}
+        url: {{ tpl .Values.grafana.prometheus.datasource.url . }}
         isDefault: true
         editable: true
         access: proxy
         # SHA256 of datasource name cut to 40 chars as in: `sha256sum <<< Promscale-PromQL | cut -c1-40`
         uid: dc08d25c8f267b054f12002f334e6d3d32a853e4
 {{- end -}}
-{{- if $kubePrometheus.grafana.jaeger.datasource.enabled }}
+{{- if .Values.grafana.jaeger.datasource.enabled }}
       - name: promescale-jaeger
         # Jaeger (OpenTelemetry compatible) data query protocol (OTLP)
         type: jaeger
-        url: {{ tpl $kubePrometheus.grafana.jaeger.tricorderTracesQueryEndPoint . }}
+        url: {{ tpl .Values.grafana.jaeger.tricorderTracesQueryEndPoint . }}
         editable: true
         access: proxy
         # SHA256 of datasource name cut to 40 chars as in: `sha256sum <<< Promscale-Tracing | cut -c1-40`
         uid: f78291126102e0f2e841734d1e90250257543042
 {{- end -}}
 
-{{ if $kubePrometheus.grafana.timescale.datasource.enabled -}}
+{{ if .Values.grafana.timescale.datasource.enabled -}}
 {{- $isDBURI := (ne .Values.promscale.connection.uri "")}}
 {{- $hostURL := "" -}}
 {{ if $isDBURI -}}
   {{- $hostURL = include "tricorder.dburi.host" . -}}
 {{ else -}}
-  {{- $host := tpl $kubePrometheus.grafana.timescale.datasource.host $ -}}
-  {{- $port := $kubePrometheus.grafana.timescale.datasource.port | int -}}
+  {{- $host := tpl .Values.grafana.timescale.datasource.host $ -}}
+  {{- $port := .Values.grafana.timescale.datasource.port | int -}}
   {{- $hostURL = printf "%s:%d" $host $port -}}
 {{ end }}
       - name: timescale-postgres
         # TimescaleDB's SQL time-series query endpoint (aka postgres endpoint)
         url: {{ $hostURL }}
         type: postgres
-        isDefault: {{ not $kubePrometheus.grafana.prometheus.datasource.enabled }}
+        isDefault: {{ not .Values.grafana.prometheus.datasource.enabled }}
         access: proxy
         # SHA256 of datasource name cut to 40 chars as in: `sha256sum <<< Promscale-SQL | cut -c1-40`
         uid: c4729dfb8ceeaa0372ef27403a3932695eee995d
-        user: {{ ternary (include "tricorder.dburi.user" . ) ($kubePrometheus.grafana.timescale.datasource.user) ($isDBURI) }}
-        database: {{ ternary (include "tricorder.dburi.dbname" . ) ($kubePrometheus.grafana.timescale.datasource.dbName) ($isDBURI) }}
+        user: {{ ternary (include "tricorder.dburi.user" . ) (.Values.grafana.timescale.datasource.user) ($isDBURI) }}
+        database: {{ ternary (include "tricorder.dburi.dbname" . ) (.Values.grafana.timescale.datasource.dbName) ($isDBURI) }}
         editable: true
         secureJsonData:
           password: {{ include "tricorder.grafana.datasource.connection.password" . }}
         jsonData:
-          sslmode: {{ ternary (include "tricorder.dburi.sslmode" . ) ($kubePrometheus.grafana.timescale.datasource.sslMode) ($isDBURI) }}
+          sslmode: {{ ternary (include "tricorder.dburi.sslmode" . ) (.Values.grafana.timescale.datasource.sslMode) ($isDBURI) }}
           postgresVersion: 1000
           timescaledb: true
 {{- end -}}
