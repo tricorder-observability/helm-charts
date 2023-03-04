@@ -2,7 +2,6 @@
 
 [![Release Charts](https://github.com/tricorder-observability/helm-charts/actions/workflows/release-chart.yaml/badge.svg)](https://github.com/tricorder-observability/helm-charts/actions/workflows/release-chart.yaml)
 [![Lint Charts](https://github.com/tricorder-observability/helm-charts/actions/workflows/lint-chart.yaml/badge.svg?event=pull_request)](https://github.com/tricorder-observability/helm-charts/actions/workflows/lint-chart.yaml)
-[![Lint Code Base](https://github.com/tricorder-observability/helm-charts/actions/workflows/super-linter.yaml/badge.svg?event=pull_request)](https://github.com/tricorder-observability/helm-charts/actions/workflows/super-linter.yaml)
 
 [中文](./docs/README_CN.md)
 
